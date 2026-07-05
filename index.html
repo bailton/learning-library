@@ -15,7 +15,6 @@
             margin: 0 auto;
         }
 
-        /* ===== Header ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -26,7 +25,21 @@
             flex-wrap: wrap;
             gap: 12px;
         }
+        .header .left { display: flex; align-items: center; gap: 12px; }
         .header h1 { font-size: 1.6rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .header .right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .header .btn-manage {
+            background: #e2e8f0;
+            border: none;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #475569;
+        }
+        .header .btn-manage:hover { background: #cbd5e1; }
         .sync-status {
             font-size: 0.8rem;
             padding: 4px 12px;
@@ -37,7 +50,6 @@
         .sync-status.loading { background: #fef9c3; color: #854d0e; }
         .sync-status.error { background: #fee2e2; color: #991b1b; }
 
-        /* ===== 配置区 ===== */
         .config-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -45,21 +57,8 @@
             padding: 16px 20px;
             margin-bottom: 16px;
         }
-        .config-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-        }
-        .config-card input {
-            flex: 1;
-            min-width: 140px;
-            padding: 8px 12px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-family: inherit;
-        }
+        .config-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+        .config-card input { flex: 1; min-width: 140px; padding: 8px 12px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.85rem; font-family: inherit; }
         .config-card input:focus { outline: none; border-color: #3b82f6; }
         .config-card .hint { font-size: 0.75rem; color: #94a3b8; margin-top: 8px; }
         .btn-connect {
@@ -89,16 +88,11 @@
         .debug-hint.success { background: #dcfce7; color: #166534; }
         .debug-hint.loading { background: #fef9c3; color: #854d0e; }
 
-        /* ===== 卡片 ===== */
         .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; }
         .card-title { font-weight: 600; font-size: 0.9rem; color: #64748b; margin-bottom: 12px; letter-spacing: 0.5px; }
 
-        /* ===== 快速添加 ===== */
-        .quick-add .form-row {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 12px;
-        }
+        /* 快速添加 */
+        .quick-add .form-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
         .quick-add .form-row-full { grid-column: 1 / -1; }
         @media (max-width: 600px) {
             .quick-add .form-row { grid-template-columns: 1fr; }
@@ -124,42 +118,41 @@
         .btn-save { background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 14px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-save:hover { background: #2563eb; }
         .btn-save:disabled { background: #94a3b8; cursor: not-allowed; }
+        .btn-save.small { padding: 8px 16px; font-size: 0.85rem; }
 
-        /* ===== 书架 ===== */
         .shelf-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 14px;
         }
         .shelf-item {
             background: #fafbfc;
             border: 1px solid #eef2f6;
             border-radius: 16px;
-            padding: 20px 16px;
+            padding: 18px 12px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
+            position: relative;
         }
         .shelf-item:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
-        .shelf-item .icon { font-size: 2.2rem; display: block; margin-bottom: 6px; }
-        .shelf-item .name { font-weight: 600; font-size: 0.95rem; }
-        .shelf-item .count { font-size: 0.75rem; color: #94a3b8; }
-        .shelf-item .delete-cat {
-            background: none;
-            border: none;
-            color: #94a3b8;
-            font-size: 0.7rem;
-            cursor: pointer;
-            margin-top: 6px;
-            padding: 2px 8px;
-            border-radius: 12px;
+        .shelf-item .icon { font-size: 2rem; display: block; margin-bottom: 4px; }
+        .shelf-item .name { font-weight: 600; font-size: 0.9rem; }
+        .shelf-item .count { font-size: 0.7rem; color: #94a3b8; }
+        .shelf-item .default-badge {
+            font-size: 0.6rem;
+            background: #e2e8f0;
+            padding: 1px 8px;
+            border-radius: 20px;
+            color: #64748b;
+            display: inline-block;
+            margin-top: 2px;
         }
-        .shelf-item .delete-cat:hover { background: #fee2e2; color: #ef4444; }
         .add-cat-btn {
             background: #fafbfc;
             border: 1px dashed #cbd5e1;
             border-radius: 16px;
-            padding: 20px 16px;
+            padding: 18px 12px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
@@ -173,7 +166,7 @@
         .add-cat-btn:hover { border-color: #3b82f6; background: #f0f4ff; color: #3b82f6; }
         .add-cat-btn span { font-size: 2rem; display: block; margin-bottom: 4px; }
 
-        /* ===== 分类详情页 ===== */
+        /* 分类详情页 */
         .detail-header {
             display: flex;
             justify-content: space-between;
@@ -194,7 +187,7 @@
         .detail-header .back-btn:hover { background: #cbd5e1; }
         .detail-header .title-area { display: flex; align-items: center; gap: 10px; }
         .detail-header .title-area .icon { font-size: 1.8rem; }
-        .detail-header .title-area .name { font-size: 1.4rem; font-weight: 700; }
+        .detail-header .title-area .name { font-size: 1.3rem; font-weight: 700; }
         .detail-header .actions { display: flex; gap: 8px; flex-wrap: wrap; }
         .detail-header .actions button {
             background: #3b82f6;
@@ -207,17 +200,8 @@
             cursor: pointer;
         }
         .detail-header .actions button:hover { background: #2563eb; }
-        .detail-header .actions .btn-outline {
-            background: #e2e8f0;
-            color: #1e293b;
-        }
-        .detail-header .actions .btn-outline:hover { background: #cbd5e1; }
 
-        .view-toggle {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 16px;
-        }
+        .view-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
         .view-toggle button {
             background: #e2e8f0;
             border: none;
@@ -228,13 +212,9 @@
             cursor: pointer;
             transition: 0.2s;
         }
-        .view-toggle button.active {
-            background: #1e293b;
-            color: white;
-        }
+        .view-toggle button.active { background: #1e293b; color: white; }
         .view-toggle button:hover:not(.active) { background: #cbd5e1; }
 
-        /* 记录列表 */
         .record-list .record-item {
             padding: 10px 14px;
             border-bottom: 1px solid #eef2f6;
@@ -254,11 +234,10 @@
             padding: 2px 10px;
             border-radius: 20px;
         }
-
         .empty-state { text-align: center; color: #94a3b8; padding: 40px 0; }
         .empty-state span { font-size: 2rem; display: block; margin-bottom: 8px; }
 
-        /* ===== Modal ===== */
+        /* Modal */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -280,7 +259,7 @@
         .modal-content {
             background: white;
             border-radius: 28px;
-            max-width: 720px;
+            max-width: 680px;
             width: 100%;
             max-height: 92vh;
             overflow-y: auto;
@@ -303,18 +282,18 @@
             z-index: 10;
         }
         .modal-close:hover { color: #1e293b; }
-        .modal-content .modal-label { font-weight: 600; font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 4px; }
-        .modal-content .modal-field { margin-bottom: 16px; }
-        .modal-content .modal-field .value {
+        .modal-label { font-weight: 600; font-size: 0.8rem; color: #64748b; display: block; margin-bottom: 4px; }
+        .modal-field { margin-bottom: 16px; }
+        .modal-field .value {
             white-space: pre-wrap;
             word-break: break-word;
             line-height: 1.6;
         }
-        .modal-content .modal-field .value strong { color: #1e293b; }
-        .modal-content .modal-field .value em { color: #475569; }
-        .modal-content .modal-field .value a { color: #3b82f6; text-decoration: underline; }
-        .modal-content .modal-field .edit-input,
-        .modal-content .modal-field .edit-textarea {
+        .modal-field .value strong { color: #1e293b; }
+        .modal-field .value em { color: #475569; }
+        .modal-field .value a { color: #3b82f6; text-decoration: underline; }
+        .modal-field .edit-input,
+        .modal-field .edit-textarea {
             width: 100%;
             padding: 10px 14px;
             border: 1.5px solid #e2e8f0;
@@ -324,13 +303,9 @@
             background: #fafbfc;
             transition: 0.2s;
         }
-        .modal-content .modal-field .edit-textarea {
-            resize: vertical;
-            min-height: 120px;
-            white-space: pre-wrap;
-        }
-        .modal-content .modal-field .edit-input:focus,
-        .modal-content .modal-field .edit-textarea:focus {
+        .modal-field .edit-textarea { resize: vertical; min-height: 120px; white-space: pre-wrap; }
+        .modal-field .edit-input:focus,
+        .modal-field .edit-textarea:focus {
             outline: none;
             border-color: #3b82f6;
             background: white;
@@ -378,12 +353,73 @@
         }
         .modal-footer-btns .btn-save-edit:hover { background: #16a34a; }
 
-        /* ===== 新建分类 Modal ===== */
-        .cat-form-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 8px 0; }
-        .cat-form-row input { flex: 1; padding: 8px 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; }
-        .cat-form-row input:focus { outline: none; border-color: #3b82f6; }
+        /* 分类管理 */
+        .cat-mgr-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid #eef2f6;
+        }
+        .cat-mgr-item:last-child { border-bottom: none; }
+        .cat-mgr-item .info { display: flex; align-items: center; gap: 10px; flex: 1; }
+        .cat-mgr-item .info .icon-input { width: 40px; text-align: center; font-size: 1.2rem; border: none; background: transparent; }
+        .cat-mgr-item .info .name-input { flex: 1; border: none; background: transparent; font-size: 0.95rem; font-weight: 500; padding: 4px 0; }
+        .cat-mgr-item .info .name-input:focus { outline: none; border-bottom: 2px solid #3b82f6; }
+        .cat-mgr-item .info .icon-input:focus { outline: none; }
+        .cat-mgr-item .info .default-tag {
+            font-size: 0.6rem;
+            background: #e2e8f0;
+            padding: 1px 10px;
+            border-radius: 20px;
+            color: #64748b;
+        }
+        .cat-mgr-item .actions { display: flex; gap: 6px; }
+        .cat-mgr-item .actions button {
+            background: none;
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: 0.2s;
+            color: #94a3b8;
+        }
+        .cat-mgr-item .actions .btn-edit-cat:hover { background: #dbeafe; color: #3b82f6; }
+        .cat-mgr-item .actions .btn-del-cat:hover { background: #fee2e2; color: #ef4444; }
+        .cat-mgr-item .actions .btn-save-cat {
+            background: #22c55e;
+            color: white;
+            border-radius: 40px;
+            padding: 2px 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .cat-mgr-item .actions .btn-save-cat:hover { background: #16a34a; }
 
-        /* ===== 排序编辑 ===== */
+        .cat-mgr-add {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #eef2f6;
+            flex-wrap: wrap;
+        }
+        .cat-mgr-add input { flex: 1; padding: 8px 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 0.9rem; min-width: 120px; }
+        .cat-mgr-add input:focus { outline: none; border-color: #3b82f6; }
+        .cat-mgr-add .btn-add-cat {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .cat-mgr-add .btn-add-cat:hover { background: #2563eb; }
+
+        /* 排序输入 */
         .order-edit-input {
             width: 60px;
             padding: 4px 8px;
@@ -394,22 +430,23 @@
         }
         .order-edit-input:focus { outline: none; border-color: #3b82f6; }
 
-        /* ===== Footer ===== */
         .footer { text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 20px 0 10px; border-top: 1px solid #eef2f6; margin-top: 10px; }
     </style>
 </head>
 <body>
 
 <div id="app">
-    <!-- ===== Header ===== -->
     <div class="header">
-        <h1>📚 Learning Library</h1>
-        <div>
+        <div class="left">
+            <h1>📚 Learning Library</h1>
+        </div>
+        <div class="right">
             <span class="sync-status" :class="syncStatusClass">{{ syncStatusText }}</span>
+            <button class="btn-manage" @click="showCategoryManager = true">⚙️ 管理分类</button>
         </div>
     </div>
 
-    <!-- ===== 配置区 ===== -->
+    <!-- 配置区 -->
     <div class="config-card">
         <div class="config-row">
             <input type="text" id="gistIdInput" placeholder="Gist ID（如：abc123def456）" />
@@ -422,8 +459,9 @@
         <div class="debug-hint" id="debugHint">💡 请填写 Gist ID 和 GitHub Token，然后点击"连接并同步"</div>
     </div>
 
-    <!-- ===== 主界面 ===== -->
+    <!-- 主界面 -->
     <div v-if="!detailMode">
+
         <!-- 快速添加 -->
         <div class="card quick-add">
             <div class="card-title">📝 快速添加记录</div>
@@ -431,7 +469,7 @@
                 <div>
                     <label>分类</label>
                     <select v-model="newRecordCategory">
-                        <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.icon }} {{ cat.name }}</option>
+                        <option v-for="cat in allCategories" :key="cat.id" :value="cat.id">{{ cat.icon }} {{ cat.name }}</option>
                     </select>
                 </div>
                 <div>
@@ -462,9 +500,9 @@
                     <span class="icon">{{ cat.icon }}</span>
                     <div class="name">{{ cat.name }}</div>
                     <div class="count">{{ getRecordCount(cat.id) }} 条记录</div>
-                    <button class="delete-cat" @click.stop="deleteCategory(cat.id)">删除分类</button>
+                    <span v-if="cat.id === 'uncategorized'" class="default-badge">默认</span>
                 </div>
-                <div class="add-cat-btn" @click="showAddCategory = true">
+                <div class="add-cat-btn" @click="showCategoryManager = true">
                     <span>➕</span>
                     新建分类
                 </div>
@@ -472,7 +510,7 @@
         </div>
     </div>
 
-    <!-- ===== 分类详情页 ===== -->
+    <!-- 分类详情页 -->
     <div v-else>
         <div class="card">
             <div class="detail-header">
@@ -505,7 +543,7 @@
                 </div>
             </div>
 
-            <!-- 按标题排列（自定义顺序） -->
+            <!-- 按标题排列 -->
             <div class="record-list" v-else>
                 <div v-if="categoryRecords.length === 0" class="empty-state">
                     <span>📭</span> 还没有记录，添加一条吧！
@@ -524,15 +562,34 @@
         </div>
     </div>
 
-    <!-- ===== 新建分类 Modal ===== -->
-    <div class="modal-overlay" :class="{ open: showAddCategory }" @click.self="showAddCategory = false">
+    <!-- ===== 分类管理 Modal ===== -->
+    <div class="modal-overlay" :class="{ open: showCategoryManager }" @click.self="showCategoryManager = false">
         <div class="modal-content">
-            <button class="modal-close" @click="showAddCategory = false">✕</button>
-            <h3 style="margin-bottom:16px;">📂 新建分类</h3>
-            <div class="cat-form-row">
-                <input v-model="newCategoryName" placeholder="分类名称（如：Health）" />
-                <input v-model="newCategoryIcon" placeholder="图标（如：🏥）" style="max-width:80px;" />
-                <button class="btn-save" @click="addCategory" style="padding:8px 20px; font-size:0.9rem;">创建</button>
+            <button class="modal-close" @click="showCategoryManager = false">✕</button>
+            <h3 style="margin-bottom:16px;">⚙️ 管理分类</h3>
+
+            <div v-for="cat in categories" :key="cat.id" class="cat-mgr-item">
+                <div class="info">
+                    <input class="icon-input" v-model="cat.icon" :disabled="!cat._editing" />
+                    <input class="name-input" v-model="cat.name" :disabled="!cat._editing" />
+                    <span v-if="cat.id === 'uncategorized'" class="default-tag">默认</span>
+                </div>
+                <div class="actions">
+                    <template v-if="!cat._editing">
+                        <button class="btn-edit-cat" @click="startEditCategory(cat.id)" v-if="cat.id !== 'uncategorized'">✏️</button>
+                        <button class="btn-del-cat" @click="deleteCategory(cat.id)" v-if="cat.id !== 'uncategorized'">🗑️</button>
+                    </template>
+                    <template v-else>
+                        <button class="btn-save-cat" @click="saveCategoryEdit(cat.id)">保存</button>
+                        <button class="btn-edit-cat" @click="cancelCategoryEdit(cat.id)" style="color:#94a3b8;">取消</button>
+                    </template>
+                </div>
+            </div>
+
+            <div class="cat-mgr-add">
+                <input v-model="newCategoryName" placeholder="分类名称" />
+                <input v-model="newCategoryIcon" placeholder="图标" style="max-width:80px;" />
+                <button class="btn-add-cat" @click="addCategory">➕ 新建</button>
             </div>
         </div>
     </div>
@@ -545,7 +602,7 @@
             <div class="modal-field">
                 <span class="modal-label">分类</span>
                 <select v-model="newRecordCategory" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:0.9rem;">
-                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.icon }} {{ cat.name }}</option>
+                    <option v-for="cat in allCategories" :key="cat.id" :value="cat.id">{{ cat.icon }} {{ cat.name }}</option>
                 </select>
             </div>
             <div class="modal-field">
@@ -642,9 +699,9 @@
                 newRecordContent: '',
                 newRecordSource: '',
                 // 新建分类
-                showAddCategory: false,
                 newCategoryName: '',
                 newCategoryIcon: '📁',
+                showCategoryManager: false,
                 // 分类详情
                 detailMode: false,
                 currentCategoryId: null,
@@ -660,11 +717,21 @@
                 editOrder: ''
             },
             computed: {
-                today: function() {
-                    return new Date().toISOString().slice(0, 10);
+                // 所有分类：自定义 + 默认"未分类"
+                allCategories: function() {
+                    var hasUncategorized = this.categories.some(c => c.id === 'uncategorized');
+                    var list = [];
+                    if (!hasUncategorized) {
+                        list.push({ id: 'uncategorized', name: '未分类', icon: '📂' });
+                    }
+                    return list.concat(this.categories);
                 },
                 currentCategory: function() {
-                    return this.categories.find(c => c.id === this.currentCategoryId) || { id: '', name: '', icon: '📁' };
+                    var found = this.categories.find(c => c.id === this.currentCategoryId);
+                    if (!found && this.currentCategoryId === 'uncategorized') {
+                        return { id: 'uncategorized', name: '未分类', icon: '📂' };
+                    }
+                    return found || { id: '', name: '', icon: '📁' };
                 },
                 categoryRecords: function() {
                     return this.records.filter(r => r.categoryId === this.currentCategoryId);
@@ -718,15 +785,14 @@
                     return this.records.filter(r => r.categoryId === categoryId).length;
                 },
                 getCategoryName: function(categoryId) {
-                    var cat = this.categories.find(c => c.id === categoryId);
-                    return cat ? cat.icon + ' ' + cat.name : '未知分类';
+                    var cat = this.allCategories.find(c => c.id === categoryId);
+                    return cat ? cat.icon + ' ' + cat.name : '📂 未分类';
                 },
                 formatDate: function(ts) {
                     if (!ts) return '';
                     var d = new Date(ts);
                     return d.toLocaleDateString('zh-CN') + ' ' + d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
                 },
-                // 渲染内容（支持加粗、列表、链接）
                 renderContent: function(text) {
                     if (!text) return '';
                     var html = text
@@ -738,7 +804,6 @@
                         .replace(/\*(.+?)\*/g, '<em>$1</em>')
                         .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>')
                         .replace(/^-\s(.+)$/gm, '• $1');
-                    // 列表项处理（多行）
                     var lines = html.split('<br>');
                     var inList = false;
                     var result = [];
@@ -751,10 +816,7 @@
                             }
                             result.push('<li style="margin:2px 0;">' + line.trim().substring(1).trim() + '</li>');
                         } else {
-                            if (inList) {
-                                result.push('</ul>');
-                                inList = false;
-                            }
+                            if (inList) { result.push('</ul>'); inList = false; }
                             result.push(line);
                         }
                     }
@@ -766,24 +828,60 @@
                 addCategory: function() {
                     if (!this.newCategoryName.trim()) { alert('请输入分类名称'); return; }
                     var id = this.newCategoryName.trim().toLowerCase().replace(/\s+/g, '-');
-                    if (this.categories.find(c => c.id === id)) {
-                        alert('分类已存在');
-                        return;
-                    }
+                    if (this.categories.find(c => c.id === id)) { alert('分类已存在'); return; }
                     this.categories.push({
                         id: id,
                         name: this.newCategoryName.trim(),
-                        icon: this.newCategoryIcon || '📁'
+                        icon: this.newCategoryIcon || '📁',
+                        _editing: false
                     });
                     this.newCategoryName = '';
                     this.newCategoryIcon = '📁';
-                    this.showAddCategory = false;
                     this.saveToGist();
+                    // 如果分类管理弹窗开着，刷新列表
+                },
+                startEditCategory: function(id) {
+                    var cat = this.categories.find(c => c.id === id);
+                    if (cat) {
+                        cat._editing = true;
+                        cat._origName = cat.name;
+                        cat._origIcon = cat.icon;
+                    }
+                },
+                saveCategoryEdit: function(id) {
+                    var cat = this.categories.find(c => c.id === id);
+                    if (cat) {
+                        cat._editing = false;
+                        delete cat._origName;
+                        delete cat._origIcon;
+                        this.saveToGist();
+                    }
+                },
+                cancelCategoryEdit: function(id) {
+                    var cat = this.categories.find(c => c.id === id);
+                    if (cat) {
+                        cat.name = cat._origName || cat.name;
+                        cat.icon = cat._origIcon || cat.icon;
+                        cat._editing = false;
+                        delete cat._origName;
+                        delete cat._origIcon;
+                    }
                 },
                 deleteCategory: function(id) {
-                    if (!confirm('确定删除这个分类吗？相关记录不会被删除，但会变成"未分类"。')) return;
+                    if (id === 'uncategorized') { alert('不能删除默认分类'); return; }
+                    if (!confirm('确定删除分类 "' + (this.categories.find(c => c.id === id) || {}).name + '" 吗？相关记录将归入"未分类"。')) return;
+                    // 将记录移到 "uncategorized"
+                    for (var i = 0; i < this.records.length; i++) {
+                        if (this.records[i].categoryId === id) {
+                            this.records[i].categoryId = 'uncategorized';
+                        }
+                    }
                     this.categories = this.categories.filter(c => c.id !== id);
-                    // 记录保留但 categoryId 不变，显示时会变成"未分类"
+                    // 如果当前在分类详情页且删除的是当前分类，返回书架
+                    if (this.detailMode && this.currentCategoryId === id) {
+                        this.detailMode = false;
+                        this.currentCategoryId = null;
+                    }
                     this.saveToGist();
                 },
 
@@ -792,7 +890,7 @@
                     if (!this.canSaveQuick) return;
                     var record = {
                         id: 'rec_' + Date.now(),
-                        categoryId: this.newRecordCategory,
+                        categoryId: this.newRecordCategory || 'uncategorized',
                         title: this.newRecordTitle.trim(),
                         content: this.newRecordContent.trim(),
                         source: this.newRecordSource.trim() || '',
@@ -860,7 +958,6 @@
                     this.currentCategoryId = id;
                     this.detailMode = true;
                     this.viewMode = 'date';
-                    // 默认选择该分类
                     this.newRecordCategory = id;
                 },
                 closeCategory: function() {
@@ -948,8 +1045,14 @@
                                     if (content) {
                                         var parsed = JSON.parse(content.content);
                                         self.categories = parsed.categories || [];
+                                        // 确保 _editing 字段不存在（避免状态残留）
+                                        for (var i = 0; i < self.categories.length; i++) {
+                                            self.categories[i]._editing = false;
+                                        }
                                         self.records = parsed.records || [];
                                         localStorage.setItem(STORAGE_KEY, JSON.stringify({ categories: self.categories, records: self.records }));
+                                        // 确保未分类存在
+                                        self.ensureUncategorized();
                                         self.syncStatus = 'success';
                                         self.syncMsg = '';
                                         self.updateDebug('✅ 已加载 ' + self.records.length + ' 条记录', 'success');
@@ -957,6 +1060,7 @@
                                         self.categories = [];
                                         self.records = [];
                                         localStorage.setItem(STORAGE_KEY, JSON.stringify({ categories: [], records: [] }));
+                                        self.ensureUncategorized();
                                         self.syncStatus = 'success';
                                         self.syncMsg = '';
                                         self.updateDebug('✅ 连接成功，当前无数据', 'success');
@@ -971,6 +1075,7 @@
                                 self.categories = [];
                                 self.records = [];
                                 localStorage.setItem(STORAGE_KEY, JSON.stringify({ categories: [], records: [] }));
+                                self.ensureUncategorized();
                                 self.syncStatus = 'success';
                                 self.syncMsg = '';
                                 self.updateDebug('✅ Gist 为空，初始化完成', 'success');
@@ -991,6 +1096,18 @@
                     };
                     xhr.send();
                 },
+                ensureUncategorized: function() {
+                    // 确保 "未分类" 在 categories 中不存在（它只出现在 allCategories 计算属性中）
+                    // 但如果有记录引用了 uncategorized，我们需要确保它存在
+                    var hasUncategorized = this.categories.some(c => c.id === 'uncategorized');
+                    if (!hasUncategorized) {
+                        // 如果有记录属于 uncategorized，自动创建
+                        var hasRecords = this.records.some(r => r.categoryId === 'uncategorized');
+                        if (hasRecords) {
+                            this.categories.push({ id: 'uncategorized', name: '未分类', icon: '📂', _editing: false });
+                        }
+                    }
+                },
                 connectAndSync: function() {
                     var gistId = this.getGistId();
                     var token = this.getGithubToken();
@@ -1007,6 +1124,9 @@
                             var parsed = JSON.parse(data);
                             this.categories = parsed.categories || [];
                             this.records = parsed.records || [];
+                            for (var i = 0; i < this.categories.length; i++) {
+                                this.categories[i]._editing = false;
+                            }
                         }
                     } catch (e) { this.categories = []; this.records = []; }
                     try {
@@ -1019,22 +1139,16 @@
                             if (tokenEl) tokenEl.value = c.token || '';
                         }
                     } catch (e) {}
-                },
-                // 清空所有数据（可选）
-                clearAll: function() {
-                    if (!confirm('确定删除所有数据吗？此操作不可撤销！')) return;
-                    this.categories = [];
-                    this.records = [];
-                    this.saveToGist();
+                    this.ensureUncategorized();
                 }
             },
             mounted: function() {
                 this.loadFromLocal();
-                // 如果有默认分类，选中第一个
-                if (this.categories.length > 0) {
-                    this.newRecordCategory = this.categories[0].id;
-                }
                 var self = this;
+                // 设置默认分类
+                if (this.allCategories.length > 0) {
+                    this.newRecordCategory = this.allCategories[0].id;
+                }
                 setTimeout(function() {
                     var gistId = self.getGistId();
                     var token = self.getGithubToken();
