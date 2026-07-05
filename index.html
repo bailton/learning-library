@@ -15,6 +15,7 @@
             margin: 0 auto;
         }
 
+        /* ===== Header ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -50,6 +51,7 @@
         .sync-status.loading { background: #fef9c3; color: #854d0e; }
         .sync-status.error { background: #fee2e2; color: #991b1b; }
 
+        /* ===== 配置区 ===== */
         .config-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -88,10 +90,11 @@
         .debug-hint.success { background: #dcfce7; color: #166534; }
         .debug-hint.loading { background: #fef9c3; color: #854d0e; }
 
+        /* ===== 卡片 ===== */
         .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; }
         .card-title { font-weight: 600; font-size: 0.9rem; color: #64748b; margin-bottom: 12px; letter-spacing: 0.5px; }
 
-        /* 快速添加 */
+        /* ===== 快速添加 ===== */
         .quick-add .form-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
         .quick-add .form-row-full { grid-column: 1 / -1; }
         @media (max-width: 600px) {
@@ -120,6 +123,7 @@
         .btn-save:disabled { background: #94a3b8; cursor: not-allowed; }
         .btn-save.small { padding: 8px 16px; font-size: 0.85rem; }
 
+        /* ===== 书架 ===== */
         .shelf-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -166,7 +170,7 @@
         .add-cat-btn:hover { border-color: #3b82f6; background: #f0f4ff; color: #3b82f6; }
         .add-cat-btn span { font-size: 2rem; display: block; margin-bottom: 4px; }
 
-        /* 分类详情页 */
+        /* ===== 分类详情页 ===== */
         .detail-header {
             display: flex;
             justify-content: space-between;
@@ -200,12 +204,23 @@
             cursor: pointer;
         }
         .detail-header .actions button:hover { background: #2563eb; }
+        .detail-header .actions .btn-read {
+            background: #8b5cf6;
+        }
+        .detail-header .actions .btn-read:hover { background: #7c3aed; }
 
-        .view-toggle { display: flex; gap: 8px; margin-bottom: 16px; }
+        .view-toggle {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+        .view-toggle .btn-group { display: flex; gap: 4px; }
         .view-toggle button {
             background: #e2e8f0;
             border: none;
-            padding: 4px 16px;
+            padding: 4px 14px;
             border-radius: 40px;
             font-size: 0.8rem;
             font-weight: 500;
@@ -214,6 +229,12 @@
         }
         .view-toggle button.active { background: #1e293b; color: white; }
         .view-toggle button:hover:not(.active) { background: #cbd5e1; }
+        .view-toggle .order-btn {
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            background: #f1f5f9;
+        }
+        .view-toggle .order-btn.active { background: #3b82f6; color: white; }
 
         .record-list .record-item {
             padding: 10px 14px;
@@ -237,7 +258,7 @@
         .empty-state { text-align: center; color: #94a3b8; padding: 40px 0; }
         .empty-state span { font-size: 2rem; display: block; margin-bottom: 8px; }
 
-        /* Modal */
+        /* ===== Modal ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -353,7 +374,7 @@
         }
         .modal-footer-btns .btn-save-edit:hover { background: #16a34a; }
 
-        /* 分类管理 */
+        /* ===== 分类管理 ===== */
         .cat-mgr-item {
             display: flex;
             justify-content: space-between;
@@ -419,9 +440,9 @@
         }
         .cat-mgr-add .btn-add-cat:hover { background: #2563eb; }
 
-        /* 排序输入 */
+        /* ===== 排序输入 ===== */
         .order-edit-input {
-            width: 60px;
+            width: 70px;
             padding: 4px 8px;
             border: 1.5px solid #e2e8f0;
             border-radius: 8px;
@@ -429,6 +450,238 @@
             text-align: center;
         }
         .order-edit-input:focus { outline: none; border-color: #3b82f6; }
+
+        /* ===== 阅读模式 ===== */
+        .reader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a2e;
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            padding: 16px 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .reader-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+        .reader-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+        .reader-header .title-area {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .reader-header .close-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .reader-header .close-btn:hover { background: rgba(255,255,255,0.2); }
+
+        .reader-body {
+            flex: 1;
+            display: flex;
+            gap: 0;
+            min-height: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 目录侧边栏 */
+        .reader-toc {
+            width: 0;
+            overflow: hidden;
+            background: rgba(255,255,255,0.05);
+            border-right: 1px solid rgba(255,255,255,0.06);
+            transition: width 0.3s ease;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+        .reader-toc.open {
+            width: 280px;
+            padding: 16px 12px;
+        }
+        .reader-toc .toc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+        .reader-toc .toc-header .toggle-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .reader-toc .toc-header .toggle-btn:hover { color: rgba(255,255,255,0.8); }
+        .reader-toc .toc-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .reader-toc .toc-list .toc-item {
+            padding: 6px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.85rem;
+            transition: 0.2s;
+            border-left: 2px solid transparent;
+        }
+        .reader-toc .toc-list .toc-item:hover { background: rgba(255,255,255,0.08); color: white; }
+        .reader-toc .toc-list .toc-item.active {
+            background: rgba(139,92,246,0.2);
+            border-left-color: #8b5cf6;
+            color: white;
+        }
+        .reader-toc .toc-list .toc-item .toc-order {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem;
+            margin-right: 6px;
+        }
+
+        /* 内容区 */
+        .reader-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 30px;
+            overflow: hidden;
+            position: relative;
+            min-width: 0;
+        }
+        .reader-content .page-content {
+            max-width: 680px;
+            width: 100%;
+            max-height: 100%;
+            overflow-y: auto;
+            color: rgba(255,255,255,0.92);
+            line-height: 1.8;
+            padding: 10px 0;
+        }
+        .reader-content .page-content .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+        .reader-content .page-content .page-meta {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 16px;
+        }
+        .reader-content .page-content .page-body {
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 1rem;
+        }
+        .reader-content .page-content .page-body strong { color: white; }
+        .reader-content .page-content .page-body em { color: rgba(255,255,255,0.7); }
+        .reader-content .page-content .page-body a { color: #8b5cf6; text-decoration: underline; }
+        .reader-content .page-content .page-body ul {
+            margin: 6px 0 6px 20px;
+            padding: 0;
+        }
+        .reader-content .page-content .page-body li { margin: 2px 0; }
+
+        /* 目录页（第一页） */
+        .reader-content .page-content.toc-page .toc-grid .toc-item {
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .reader-content .page-content.toc-page .toc-grid .toc-item:hover {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+        }
+        .reader-content .page-content.toc-page .toc-grid .toc-item .order {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.75rem;
+            min-width: 40px;
+        }
+        .reader-content .page-content.toc-page .toc-grid .toc-item .title {
+            color: rgba(255,255,255,0.8);
+        }
+        .reader-content .page-content.toc-page .toc-grid .toc-item:hover .title {
+            color: white;
+        }
+        .reader-content .page-content.toc-page .toc-count {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .reader-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            flex-shrink: 0;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .reader-nav .nav-btn {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.7);
+            padding: 6px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .reader-nav .nav-btn:hover:not(:disabled) {
+            background: rgba(255,255,255,0.15);
+            color: white;
+        }
+        .reader-nav .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .reader-nav .nav-progress {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 600px) {
+            .reader-toc.open { width: 200px; }
+            .reader-content { padding: 12px 16px; }
+            .reader-content .page-content .page-title { font-size: 1.2rem; }
+            .reader-nav .nav-btn { padding: 4px 14px; font-size: 0.75rem; }
+        }
 
         .footer { text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 20px 0 10px; border-top: 1px solid #eef2f6; margin-top: 10px; }
     </style>
@@ -462,7 +715,6 @@
     <!-- 主界面 -->
     <div v-if="!detailMode">
 
-        <!-- 快速添加 -->
         <div class="card quick-add">
             <div class="card-title">📝 快速添加记录</div>
             <div class="form-row">
@@ -492,7 +744,6 @@
             </div>
         </div>
 
-        <!-- 书架 -->
         <div class="card">
             <div class="card-title">📚 我的书架</div>
             <div class="shelf-grid">
@@ -503,8 +754,7 @@
                     <span v-if="cat.id === 'uncategorized'" class="default-badge">默认</span>
                 </div>
                 <div class="add-cat-btn" @click="showCategoryManager = true">
-                    <span>➕</span>
-                    新建分类
+                    <span>➕</span> 新建分类
                 </div>
             </div>
         </div>
@@ -521,42 +771,33 @@
                 </div>
                 <div class="actions">
                     <button @click="showNewRecordInDetail = true">➕ 新记录</button>
+                    <button class="btn-read" @click="openReader" v-if="categoryRecords.length > 0">📖 阅读模式</button>
                 </div>
             </div>
 
             <div class="view-toggle">
-                <button :class="{ active: viewMode === 'date' }" @click="viewMode = 'date'">📋 按日期排列</button>
-                <button :class="{ active: viewMode === 'title' }" @click="viewMode = 'title'">📖 按标题排列</button>
+                <div class="btn-group">
+                    <button :class="{ active: viewMode === 'date' }" @click="viewMode = 'date'; sortDir = 'desc'">📋 按日期</button>
+                    <button :class="{ active: viewMode === 'title' }" @click="viewMode = 'title'; sortDir = 'asc'">📖 按标题</button>
+                </div>
+                <div class="btn-group" style="margin-left:8px;">
+                    <button class="order-btn" :class="{ active: sortDir === 'asc' }" @click="sortDir = 'asc'">↑ 正序</button>
+                    <button class="order-btn" :class="{ active: sortDir === 'desc' }" @click="sortDir = 'desc'">↓ 倒序</button>
+                </div>
             </div>
 
-            <!-- 按日期排列 -->
-            <div class="record-list" v-if="viewMode === 'date'">
+            <div class="record-list">
                 <div v-if="categoryRecords.length === 0" class="empty-state">
                     <span>📭</span> 还没有记录，添加一条吧！
                 </div>
-                <div v-for="item in sortedByDate" :key="item.id" class="record-item" @click="openRecord(item)">
+                <div v-for="item in sortedRecords" :key="item.id" class="record-item" @click="openRecord(item)">
                     <div class="left">
                         <div class="title">{{ item.title }}</div>
-                        <div class="meta">{{ formatDate(item.createdAt) }}</div>
+                        <div class="meta">
+                            {{ viewMode === 'date' ? formatDate(item.createdAt) : (item.order ? '排序: ' + item.order : '未设置') }}
+                        </div>
                     </div>
                     <span class="order-badge">{{ item.source || '无来源' }}</span>
-                </div>
-            </div>
-
-            <!-- 按标题排列 -->
-            <div class="record-list" v-else>
-                <div v-if="categoryRecords.length === 0" class="empty-state">
-                    <span>📭</span> 还没有记录，添加一条吧！
-                </div>
-                <div v-for="item in sortedByOrder" :key="item.id" class="record-item" @click="openRecord(item)">
-                    <div class="left">
-                        <div class="title">{{ item.title }}</div>
-                        <div class="meta">排序: {{ item.order || '未设置' }}</div>
-                    </div>
-                    <div style="display:flex; gap:8px; align-items:center;">
-                        <input class="order-edit-input" type="text" :value="item.order" @click.stop @input="updateOrder(item, $event.target.value)" placeholder="序号" />
-                        <span class="order-badge">{{ item.source || '无来源' }}</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -567,7 +808,6 @@
         <div class="modal-content">
             <button class="modal-close" @click="showCategoryManager = false">✕</button>
             <h3 style="margin-bottom:16px;">⚙️ 管理分类</h3>
-
             <div v-for="cat in categories" :key="cat.id" class="cat-mgr-item">
                 <div class="info">
                     <input class="icon-input" v-model="cat.icon" :disabled="!cat._editing" />
@@ -585,7 +825,6 @@
                     </template>
                 </div>
             </div>
-
             <div class="cat-mgr-add">
                 <input v-model="newCategoryName" placeholder="分类名称" />
                 <input v-model="newCategoryIcon" placeholder="图标" style="max-width:80px;" />
@@ -594,7 +833,7 @@
         </div>
     </div>
 
-    <!-- ===== 新建记录 Modal（详情页内） ===== -->
+    <!-- ===== 新建记录 Modal ===== -->
     <div class="modal-overlay" :class="{ open: showNewRecordInDetail }" @click.self="showNewRecordInDetail = false">
         <div class="modal-content">
             <button class="modal-close" @click="showNewRecordInDetail = false">✕</button>
@@ -674,6 +913,66 @@
         </div>
     </div>
 
+    <!-- ===== 阅读模式 ===== -->
+    <div class="reader-overlay" :class="{ open: readerOpen }">
+        <div class="reader-header">
+            <span class="title-area">📖 {{ currentCategory.name || '阅读' }}</span>
+            <button class="close-btn" @click="closeReader">✕ 关闭</button>
+        </div>
+        <div class="reader-body">
+            <!-- 目录侧边栏 -->
+            <div class="reader-toc" :class="{ open: tocOpen }">
+                <div class="toc-header">
+                    <span>📑 目录</span>
+                    <button class="toggle-btn" @click="tocOpen = false">◀ 收起</button>
+                </div>
+                <div class="toc-list">
+                    <div class="toc-item" :class="{ active: readerPage === 0 }" @click="goToPage(0)">
+                        📑 目录
+                    </div>
+                    <div class="toc-item" v-for="(item, idx) in categoryRecords" :key="item.id" :class="{ active: readerPage === idx + 1 }" @click="goToPage(idx + 1)">
+                        <span class="toc-order">{{ item.order || '' }}</span>
+                        {{ item.title }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 内容区 -->
+            <div class="reader-content">
+                <div class="page-content" :class="{ 'toc-page': readerPage === 0 }">
+                    <!-- 目录页 -->
+                    <template v-if="readerPage === 0">
+                        <h2 style="color:white;margin-bottom:12px;">📑 目录</h2>
+                        <div class="toc-grid">
+                            <div class="toc-item" v-for="(item, idx) in categoryRecords" :key="item.id" @click="goToPage(idx + 1)">
+                                <span class="order">{{ item.order || '' }}</span>
+                                <span class="title">{{ item.title }}</span>
+                            </div>
+                        </div>
+                        <div class="toc-count">共 {{ categoryRecords.length }} 条记录</div>
+                    </template>
+                    <!-- 内容页 -->
+                    <template v-else>
+                        <div class="page-title">{{ readerItem.title }}</div>
+                        <div class="page-meta">
+                            {{ formatDate(readerItem.createdAt) }}
+                            <span v-if="readerItem.source"> · 📎 {{ readerItem.source }}</span>
+                        </div>
+                        <div class="page-body" v-html="renderContent(readerItem.content)"></div>
+                    </template>
+                </div>
+
+                <div class="reader-nav">
+                    <button class="nav-btn" @click="readerPrev" :disabled="readerPage <= 0">◀ 上一页</button>
+                    <span class="nav-progress">{{ readerPage + 1 }} / {{ totalReaderPages }}</span>
+                    <button class="nav-btn" @click="readerNext" :disabled="readerPage >= totalReaderPages - 1">下一页 ▶</button>
+                </div>
+            </div>
+        </div>
+        <!-- 展开目录按钮（当目录收起时显示） -->
+        <button v-if="!tocOpen" style="position:fixed;bottom:80px;left:20px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);color:white;padding:8px 16px;border-radius:40px;cursor:pointer;font-size:0.8rem;z-index:10;" @click="tocOpen = true">📚 目录</button>
+    </div>
+
     <div class="footer">☁️ 数据存储在 GitHub Gist · 跨设备同步 · 个人知识管理</div>
 </div>
 
@@ -706,6 +1005,7 @@
                 detailMode: false,
                 currentCategoryId: null,
                 viewMode: 'date',
+                sortDir: 'desc',
                 showNewRecordInDetail: false,
                 // 记录详情
                 showRecordDetail: false,
@@ -714,10 +1014,13 @@
                 editTitle: '',
                 editContent: '',
                 editSource: '',
-                editOrder: ''
+                editOrder: '',
+                // 阅读模式
+                readerOpen: false,
+                readerPage: 0,
+                tocOpen: true
             },
             computed: {
-                // 所有分类：自定义 + 默认"未分类"
                 allCategories: function() {
                     var hasUncategorized = this.categories.some(c => c.id === 'uncategorized');
                     var list = [];
@@ -736,17 +1039,39 @@
                 categoryRecords: function() {
                     return this.records.filter(r => r.categoryId === this.currentCategoryId);
                 },
-                sortedByDate: function() {
-                    return this.categoryRecords.slice().sort((a, b) => {
-                        return new Date(b.createdAt) - new Date(a.createdAt);
-                    });
-                },
-                sortedByOrder: function() {
-                    return this.categoryRecords.slice().sort((a, b) => {
-                        var oa = parseFloat(a.order) || 999;
-                        var ob = parseFloat(b.order) || 999;
-                        return oa - ob;
-                    });
+                sortedRecords: function() {
+                    var list = this.categoryRecords.slice();
+                    var self = this;
+                    if (this.viewMode === 'date') {
+                        list.sort(function(a, b) {
+                            var da = new Date(a.createdAt);
+                            var db = new Date(b.createdAt);
+                            return self.sortDir === 'desc' ? db - da : da - db;
+                        });
+                    } else {
+                        // 按标题排序 - 支持多级编号 1, 1.1, 1.1.1
+                        list.sort(function(a, b) {
+                            var oa = a.order || '';
+                            var ob = b.order || '';
+                            // 如果都没有 order，按标题排序
+                            if (!oa && !ob) {
+                                return self.sortDir === 'desc' ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
+                            }
+                            // 按多级编号比较
+                            var partsA = oa.toString().split('.').map(Number);
+                            var partsB = ob.toString().split('.').map(Number);
+                            var maxLen = Math.max(partsA.length, partsB.length);
+                            for (var i = 0; i < maxLen; i++) {
+                                var va = partsA[i] || 0;
+                                var vb = partsB[i] || 0;
+                                if (va !== vb) {
+                                    return self.sortDir === 'desc' ? vb - va : va - vb;
+                                }
+                            }
+                            return self.sortDir === 'desc' ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
+                        });
+                    }
+                    return list;
                 },
                 canSaveQuick: function() {
                     return this.newRecordCategory && this.newRecordTitle.trim() && this.newRecordContent.trim();
@@ -762,6 +1087,14 @@
                     if (this.syncStatus === 'loading') return '⏳ 同步中';
                     if (this.syncStatus === 'error') return '❌ ' + this.syncMsg;
                     return '⚪ 未连接';
+                },
+                // 阅读模式
+                totalReaderPages: function() {
+                    return 1 + this.categoryRecords.length; // 目录页 + 每条记录一页
+                },
+                readerItem: function() {
+                    var idx = this.readerPage - 1;
+                    return this.categoryRecords[idx] || null;
                 }
             },
             methods: {
@@ -838,7 +1171,6 @@
                     this.newCategoryName = '';
                     this.newCategoryIcon = '📁';
                     this.saveToGist();
-                    // 如果分类管理弹窗开着，刷新列表
                 },
                 startEditCategory: function(id) {
                     var cat = this.categories.find(c => c.id === id);
@@ -870,14 +1202,12 @@
                 deleteCategory: function(id) {
                     if (id === 'uncategorized') { alert('不能删除默认分类'); return; }
                     if (!confirm('确定删除分类 "' + (this.categories.find(c => c.id === id) || {}).name + '" 吗？相关记录将归入"未分类"。')) return;
-                    // 将记录移到 "uncategorized"
                     for (var i = 0; i < this.records.length; i++) {
                         if (this.records[i].categoryId === id) {
                             this.records[i].categoryId = 'uncategorized';
                         }
                     }
                     this.categories = this.categories.filter(c => c.id !== id);
-                    // 如果当前在分类详情页且删除的是当前分类，返回书架
                     if (this.detailMode && this.currentCategoryId === id) {
                         this.detailMode = false;
                         this.currentCategoryId = null;
@@ -958,12 +1288,52 @@
                     this.currentCategoryId = id;
                     this.detailMode = true;
                     this.viewMode = 'date';
+                    this.sortDir = 'desc';
                     this.newRecordCategory = id;
                 },
                 closeCategory: function() {
                     this.detailMode = false;
                     this.currentCategoryId = null;
                     this.showNewRecordInDetail = false;
+                },
+
+                // ===== 阅读模式 =====
+                openReader: function() {
+                    if (this.categoryRecords.length === 0) return;
+                    this.readerPage = 0; // 从目录页开始
+                    this.tocOpen = true;
+                    this.readerOpen = true;
+                    document.body.style.overflow = 'hidden';
+                    document.addEventListener('keydown', this.readerKeyHandler);
+                },
+                closeReader: function() {
+                    this.readerOpen = false;
+                    document.body.style.overflow = '';
+                    document.removeEventListener('keydown', this.readerKeyHandler);
+                },
+                readerNext: function() {
+                    if (this.readerPage < this.totalReaderPages - 1) {
+                        this.readerPage++;
+                    }
+                },
+                readerPrev: function() {
+                    if (this.readerPage > 0) {
+                        this.readerPage--;
+                    }
+                },
+                goToPage: function(page) {
+                    this.readerPage = page;
+                },
+                readerKeyHandler: function(e) {
+                    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                        e.preventDefault();
+                        this.readerNext();
+                    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        this.readerPrev();
+                    } else if (e.key === 'Escape') {
+                        this.closeReader();
+                    }
                 },
 
                 // ===== Gist API =====
@@ -1045,13 +1415,11 @@
                                     if (content) {
                                         var parsed = JSON.parse(content.content);
                                         self.categories = parsed.categories || [];
-                                        // 确保 _editing 字段不存在（避免状态残留）
                                         for (var i = 0; i < self.categories.length; i++) {
                                             self.categories[i]._editing = false;
                                         }
                                         self.records = parsed.records || [];
                                         localStorage.setItem(STORAGE_KEY, JSON.stringify({ categories: self.categories, records: self.records }));
-                                        // 确保未分类存在
                                         self.ensureUncategorized();
                                         self.syncStatus = 'success';
                                         self.syncMsg = '';
@@ -1097,11 +1465,8 @@
                     xhr.send();
                 },
                 ensureUncategorized: function() {
-                    // 确保 "未分类" 在 categories 中不存在（它只出现在 allCategories 计算属性中）
-                    // 但如果有记录引用了 uncategorized，我们需要确保它存在
                     var hasUncategorized = this.categories.some(c => c.id === 'uncategorized');
                     if (!hasUncategorized) {
-                        // 如果有记录属于 uncategorized，自动创建
                         var hasRecords = this.records.some(r => r.categoryId === 'uncategorized');
                         if (hasRecords) {
                             this.categories.push({ id: 'uncategorized', name: '未分类', icon: '📂', _editing: false });
@@ -1145,7 +1510,6 @@
             mounted: function() {
                 this.loadFromLocal();
                 var self = this;
-                // 设置默认分类
                 if (this.allCategories.length > 0) {
                     this.newRecordCategory = this.allCategories[0].id;
                 }
