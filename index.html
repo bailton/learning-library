@@ -441,7 +441,6 @@
         }
         .order-edit-input:focus { outline: none; border-color: #3b82f6; }
 
-        /* ===== 阅读模式 ===== */
         .reader-overlay {
             position: fixed;
             top: 0;
@@ -717,7 +716,6 @@
 <body>
 
 <div id="app">
-    <!-- 头部 -->
     <div class="header">
         <div class="left">
             <h1>📚 Learning Library</h1>
@@ -728,7 +726,6 @@
         </div>
     </div>
 
-    <!-- 配置区 -->
     <div class="config-card">
         <div class="config-row">
             <input type="text" id="gistIdInput" placeholder="Gist ID（如：abc123def456）" />
@@ -741,7 +738,6 @@
         <div class="debug-hint" id="debugHint">💡 请填写 Gist ID 和 GitHub Token，然后点击"连接并同步"</div>
     </div>
 
-    <!-- 主界面 -->
     <div v-if="!detailMode">
 
         <div class="card quick-add">
@@ -789,7 +785,6 @@
         </div>
     </div>
 
-    <!-- 分类详情页 -->
     <div v-else>
         <div class="card">
             <div class="detail-header">
@@ -832,7 +827,6 @@
         </div>
     </div>
 
-    <!-- ===== 分类管理 Modal ===== -->
     <div class="modal-overlay" :class="{ open: showCategoryManager }" @click.self="showCategoryManager = false">
         <div class="modal-content">
             <button class="modal-close" @click="showCategoryManager = false">✕</button>
@@ -862,7 +856,6 @@
         </div>
     </div>
 
-    <!-- ===== 新建记录 Modal ===== -->
     <div class="modal-overlay" :class="{ open: showNewRecordInDetail }" @click.self="showNewRecordInDetail = false">
         <div class="modal-content">
             <button class="modal-close" @click="showNewRecordInDetail = false">✕</button>
@@ -892,7 +885,6 @@
         </div>
     </div>
 
-    <!-- ===== 记录详情 Modal ===== -->
     <div class="modal-overlay" :class="{ open: showRecordDetail }" @click.self="closeRecordDetail">
         <div class="modal-content" v-if="currentRecord">
             <button class="modal-close" @click="closeRecordDetail">✕</button>
@@ -942,7 +934,6 @@
         </div>
     </div>
 
-    <!-- ===== 阅读模式 ===== -->
     <div class="reader-overlay" :class="{ open: readerOpen }">
         <div class="reader-header">
             <span class="title-area">📖 {{ currentCategory.name || '阅读' }}</span>
@@ -1145,26 +1136,29 @@
                     var d = new Date(ts);
                     return d.toLocaleDateString('zh-CN') + ' ' + d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
                 },
+                // ★★★ 核心修复：正确渲染换行、加粗、列表 ★★★
                 renderContent: function(text) {
                     if (!text) return '';
+                    
+                    // 1. 转义 HTML 特殊字符
                     var html = text
                         .replace(/&/g, '&amp;')
                         .replace(/</g, '&lt;')
                         .replace(/>/g, '&gt;');
                     
-                    // 换行 → <br>
+                    // 2. 换行 → <br>
                     html = html.replace(/\n/g, '<br>');
                     
-                    // 加粗 **文字** → <strong>文字</strong>
+                    // 3. 加粗 **文字** → <strong>文字</strong>
                     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
                     
-                    // 斜体 *文字* → <em>文字</em>
+                    // 4. 斜体 *文字* → <em>文字</em>
                     html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
                     
-                    // 链接 [文字](url) → <a href="url">文字</a>
+                    // 5. 链接 [文字](url) → <a href="url">文字</a>
                     html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
                     
-                    // 列表项 - 项目 → 包裹在 <ul> 中
+                    // 6. 列表项 - 项目 → <ul><li>项目</li></ul>
                     var lines = html.split('<br>');
                     var inList = false;
                     var result = [];
@@ -1177,7 +1171,6 @@
                                 inList = true;
                             }
                             var content = trimmed.replace(/^[-•]\s/, '');
-                            // 内容里可能还有加粗/链接
                             content = content
                                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                                 .replace(/\*(.+?)\*/g, '<em>$1</em>')
