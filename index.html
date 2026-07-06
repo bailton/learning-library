@@ -300,7 +300,7 @@
         .modal-field .value {
             white-space: pre-wrap;
             word-break: break-word;
-            line-height: 1.6;
+            line-height: 1.8;
         }
         .modal-field .value strong { color: #1e293b; }
         .modal-field .value em { color: #475569; }
@@ -603,6 +603,7 @@
             white-space: pre-wrap;
             word-break: break-word;
             font-size: 1rem;
+            line-height: 1.8;
         }
         .reader-content .page-content .page-body strong { color: white; }
         .reader-content .page-content .page-body em { color: rgba(255,255,255,0.7); }
@@ -871,7 +872,7 @@
                 <input class="edit-input" v-model="newRecordTitle" placeholder="输入标题..." />
             </div>
             <div class="modal-field">
-                <span class="modal-label">内容（支持 **加粗**、- 列表、[文字](链接)）</span>
+                <span class="modal-label">内容</span>
                 <textarea class="edit-textarea" v-model="newRecordContent" placeholder="输入内容..." rows="6"></textarea>
             </div>
             <div class="modal-field">
@@ -1136,58 +1137,35 @@
                     var d = new Date(ts);
                     return d.toLocaleDateString('zh-CN') + ' ' + d.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
                 },
-                // ★★★ 核心修复：正确渲染换行、加粗、列表 ★★★
+                // ★★★ brand-review 风格的 renderContent ★★★
                 renderContent: function(text) {
                     if (!text) return '';
-                    
-                    // 1. 转义 HTML 特殊字符
                     var html = text
                         .replace(/&/g, '&amp;')
                         .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;');
-                    
-                    // 2. 换行 → <br>
-                    html = html.replace(/\n/g, '<br>');
-                    
-                    // 3. 加粗 **文字** → <strong>文字</strong>
-                    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-                    
-                    // 4. 斜体 *文字* → <em>文字</em>
-                    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-                    
-                    // 5. 链接 [文字](url) → <a href="url">文字</a>
-                    html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                    
-                    // 6. 列表项 - 项目 → <ul><li>项目</li></ul>
+                        .replace(/>/g, '&gt;')
+                        .replace(/\n/g, '<br>')
+                        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                        .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>')
+                        .replace(/^-\s(.+)$/gm, '• $1');
                     var lines = html.split('<br>');
                     var inList = false;
                     var result = [];
                     for (var i = 0; i < lines.length; i++) {
                         var line = lines[i];
-                        var trimmed = line.trim();
-                        if (trimmed.match(/^[-•]\s/)) {
+                        if (line.trim().startsWith('•')) {
                             if (!inList) {
-                                result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
+                                result.push('<ul style="margin:4px 0 4px 20px;padding:0;">');
                                 inList = true;
                             }
-                            var content = trimmed.replace(/^[-•]\s/, '');
-                            content = content
-                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
-                                .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                            result.push('<li style="margin:2px 0;">' + content + '</li>');
+                            result.push('<li style="margin:2px 0;">' + line.trim().substring(1).trim() + '</li>');
                         } else {
-                            if (inList) {
-                                result.push('</ul>');
-                                inList = false;
-                            }
-                            if (line !== '') {
-                                result.push(line);
-                            }
+                            if (inList) { result.push('</ul>'); inList = false; }
+                            result.push(line);
                         }
                     }
                     if (inList) result.push('</ul>');
-                    
                     return result.join('');
                 },
                 getOrderLevel: function(order) {
