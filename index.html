@@ -556,7 +556,6 @@
             align-items: center;
             gap: 6px;
         }
-        /* 根据层级缩进 */
         .reader-toc .toc-list .toc-item.level-0 { padding-left: 10px; }
         .reader-toc .toc-list .toc-item.level-1 { padding-left: 28px; }
         .reader-toc .toc-list .toc-item.level-2 { padding-left: 46px; }
@@ -733,6 +732,7 @@
 <body>
 
 <div id="app">
+    <!-- 头部 -->
     <div class="header">
         <div class="left">
             <h1>📚 Learning Library</h1>
@@ -1019,7 +1019,7 @@
             </div>
         </div>
 
-        <!-- 展开目录按钮 - 固定在左上角 -->
+        <!-- 展开目录按钮 -->
         <button class="reader-toc-toggle" :class="{ visible: !tocOpen }" @click="tocOpen = true">📚 目录</button>
     </div>
 
@@ -1035,29 +1035,23 @@
         new Vue({
             el: '#app',
             data: {
-                // 数据
                 categories: [],
                 records: [],
-                // 配置
                 syncing: false,
                 syncStatus: '',
                 syncMsg: '',
-                // 快速添加
                 newRecordCategory: '',
                 newRecordTitle: '',
                 newRecordContent: '',
                 newRecordSource: '',
-                // 新建分类
                 newCategoryName: '',
                 newCategoryIcon: '📁',
                 showCategoryManager: false,
-                // 分类详情
                 detailMode: false,
                 currentCategoryId: null,
                 viewMode: 'date',
                 sortDir: 'desc',
                 showNewRecordInDetail: false,
-                // 记录详情
                 showRecordDetail: false,
                 currentRecord: null,
                 editingRecord: false,
@@ -1065,7 +1059,6 @@
                 editContent: '',
                 editSource: '',
                 editOrder: '',
-                // 阅读模式
                 readerOpen: false,
                 readerPage: 0,
                 tocOpen: true
@@ -1099,10 +1092,11 @@
                             return self.sortDir === 'desc' ? db - da : da - db;
                         });
                     } else {
-                        // 按标题排序 - 支持多级编号 1, 1.1, 1.1.1
+                        // ★★★ 修正：多级编号正确排序（1 → 1.1 → 1.1.1 → 2 → 2.1） ★★★
                         list.sort(function(a, b) {
                             var oa = a.order || '';
                             var ob = b.order || '';
+                            // 如果都没有 order，按标题排序
                             if (!oa && !ob) {
                                 return self.sortDir === 'desc' ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
                             }
@@ -1113,9 +1107,13 @@
                                 var va = partsA[i] || 0;
                                 var vb = partsB[i] || 0;
                                 if (va !== vb) {
+                                    // ★★★ 关键修正：短的排在前面（父级在前） ★★★
+                                    if (i >= partsA.length) return self.sortDir === 'desc' ? 1 : -1;
+                                    if (i >= partsB.length) return self.sortDir === 'desc' ? -1 : 1;
                                     return self.sortDir === 'desc' ? vb - va : va - vb;
                                 }
                             }
+                            // 所有部分都相同，按标题排序
                             return self.sortDir === 'desc' ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
                         });
                     }
@@ -1136,7 +1134,6 @@
                     if (this.syncStatus === 'error') return '❌ ' + this.syncMsg;
                     return '⚪ 未连接';
                 },
-                // 阅读模式
                 totalReaderPages: function() {
                     return 1 + this.categoryRecords.length;
                 },
@@ -1146,7 +1143,6 @@
                 }
             },
             methods: {
-                // ===== 工具 =====
                 getGistId: function() {
                     var el = document.getElementById('gistIdInput');
                     return el ? el.value.trim() : '';
@@ -1204,7 +1200,6 @@
                     if (inList) result.push('</ul>');
                     return result.join('');
                 },
-                // 获取排序层级（用于缩进）
                 getOrderLevel: function(order) {
                     if (!order) return 0;
                     var parts = order.toString().split('.');
