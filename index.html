@@ -15,7 +15,6 @@
             margin: 0 auto;
         }
 
-        /* ===== Header ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -51,7 +50,6 @@
         .sync-status.loading { background: #fef9c3; color: #854d0e; }
         .sync-status.error { background: #fee2e2; color: #991b1b; }
 
-        /* ===== 配置区 ===== */
         .config-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -90,11 +88,9 @@
         .debug-hint.success { background: #dcfce7; color: #166534; }
         .debug-hint.loading { background: #fef9c3; color: #854d0e; }
 
-        /* ===== 卡片 ===== */
         .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; }
         .card-title { font-weight: 600; font-size: 0.9rem; color: #64748b; margin-bottom: 12px; letter-spacing: 0.5px; }
 
-        /* ===== 快速添加 ===== */
         .quick-add .form-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
         .quick-add .form-row-full { grid-column: 1 / -1; }
         @media (max-width: 600px) {
@@ -121,9 +117,7 @@
         .btn-save { background: #3b82f6; color: white; border: none; padding: 12px 24px; border-radius: 14px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-save:hover { background: #2563eb; }
         .btn-save:disabled { background: #94a3b8; cursor: not-allowed; }
-        .btn-save.small { padding: 8px 16px; font-size: 0.85rem; }
 
-        /* ===== 书架 ===== */
         .shelf-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -170,7 +164,6 @@
         .add-cat-btn:hover { border-color: #3b82f6; background: #f0f4ff; color: #3b82f6; }
         .add-cat-btn span { font-size: 2rem; display: block; margin-bottom: 4px; }
 
-        /* ===== 分类详情页 ===== */
         .detail-header {
             display: flex;
             justify-content: space-between;
@@ -258,7 +251,6 @@
         .empty-state { text-align: center; color: #94a3b8; padding: 40px 0; }
         .empty-state span { font-size: 2rem; display: block; margin-bottom: 8px; }
 
-        /* ===== Modal ===== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -374,7 +366,6 @@
         }
         .modal-footer-btns .btn-save-edit:hover { background: #16a34a; }
 
-        /* ===== 分类管理 ===== */
         .cat-mgr-item {
             display: flex;
             justify-content: space-between;
@@ -440,7 +431,6 @@
         }
         .cat-mgr-add .btn-add-cat:hover { background: #2563eb; }
 
-        /* ===== 排序输入 ===== */
         .order-edit-input {
             width: 70px;
             padding: 4px 8px;
@@ -504,7 +494,6 @@
             position: relative;
         }
 
-        /* 目录侧边栏 */
         .reader-toc {
             width: 0;
             overflow: hidden;
@@ -560,7 +549,6 @@
         .reader-toc .toc-list .toc-item.level-1 { padding-left: 28px; }
         .reader-toc .toc-list .toc-item.level-2 { padding-left: 46px; }
         .reader-toc .toc-list .toc-item.level-3 { padding-left: 64px; }
-
         .reader-toc .toc-list .toc-item:hover { background: rgba(255,255,255,0.08); color: white; }
         .reader-toc .toc-list .toc-item.active {
             background: rgba(139,92,246,0.2);
@@ -573,7 +561,6 @@
             min-width: 30px;
         }
 
-        /* 内容区 - 固定高度 */
         .reader-content {
             flex: 1;
             display: flex;
@@ -622,12 +609,12 @@
         .reader-content .page-content .page-body em { color: rgba(255,255,255,0.7); }
         .reader-content .page-content .page-body a { color: #8b5cf6; text-decoration: underline; }
         .reader-content .page-content .page-body ul {
-            margin: 6px 0 6px 20px;
+            margin: 4px 0 4px 20px;
             padding: 0;
+            list-style-type: disc;
         }
         .reader-content .page-content .page-body li { margin: 2px 0; }
 
-        /* 目录页 */
         .reader-content .page-content.toc-page .toc-grid .toc-item {
             padding: 8px 12px;
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -659,7 +646,6 @@
             text-align: center;
         }
 
-        /* 底部导航 - 固定位置 */
         .reader-nav {
             display: flex;
             justify-content: space-between;
@@ -694,7 +680,6 @@
             font-size: 0.8rem;
         }
 
-        /* 展开目录按钮 - 固定在左上角 */
         .reader-toc-toggle {
             position: fixed;
             top: 70px;
@@ -964,7 +949,6 @@
             <button class="close-btn" @click="closeReader">✕ 关闭</button>
         </div>
         <div class="reader-body">
-            <!-- 目录侧边栏 -->
             <div class="reader-toc" :class="{ open: tocOpen }">
                 <div class="toc-header">
                     <span>📑 目录</span>
@@ -983,11 +967,9 @@
                 </div>
             </div>
 
-            <!-- 内容区 -->
             <div class="reader-content">
                 <div class="page-wrapper">
                     <div class="page-content" :class="{ 'toc-page': readerPage === 0 }">
-                        <!-- 目录页 -->
                         <template v-if="readerPage === 0">
                             <h2 style="color:white;margin-bottom:12px;">📑 目录</h2>
                             <div class="toc-grid">
@@ -998,7 +980,6 @@
                             </div>
                             <div class="toc-count">共 {{ categoryRecords.length }} 条记录</div>
                         </template>
-                        <!-- 内容页 -->
                         <template v-else>
                             <div class="page-title">{{ readerItem.title }}</div>
                             <div class="page-meta">
@@ -1009,7 +990,6 @@
                         </template>
                     </div>
 
-                    <!-- 底部导航 - 固定在同一位置 -->
                     <div class="reader-nav">
                         <button class="nav-btn" @click="readerPrev" :disabled="readerPage <= 0">◀ 上一页</button>
                         <span class="nav-progress">{{ readerPage + 1 }} / {{ totalReaderPages }}</span>
@@ -1019,7 +999,6 @@
             </div>
         </div>
 
-        <!-- 展开目录按钮 -->
         <button class="reader-toc-toggle" :class="{ visible: !tocOpen }" @click="tocOpen = true">📚 目录</button>
     </div>
 
@@ -1092,11 +1071,9 @@
                             return self.sortDir === 'desc' ? db - da : da - db;
                         });
                     } else {
-                        // ★★★ 修正：多级编号正确排序（1 → 1.1 → 1.1.1 → 2 → 2.1） ★★★
                         list.sort(function(a, b) {
                             var oa = a.order || '';
                             var ob = b.order || '';
-                            // 如果都没有 order，按标题排序
                             if (!oa && !ob) {
                                 return self.sortDir === 'desc' ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
                             }
@@ -1107,13 +1084,11 @@
                                 var va = partsA[i] || 0;
                                 var vb = partsB[i] || 0;
                                 if (va !== vb) {
-                                    // ★★★ 关键修正：短的排在前面（父级在前） ★★★
                                     if (i >= partsA.length) return self.sortDir === 'desc' ? 1 : -1;
                                     if (i >= partsB.length) return self.sortDir === 'desc' ? -1 : 1;
                                     return self.sortDir === 'desc' ? vb - va : va - vb;
                                 }
                             }
-                            // 所有部分都相同，按标题排序
                             return self.sortDir === 'desc' ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
                         });
                     }
@@ -1175,29 +1150,51 @@
                     var html = text
                         .replace(/&/g, '&amp;')
                         .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;')
-                        .replace(/\n/g, '<br>')
-                        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-                        .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>')
-                        .replace(/^-\s(.+)$/gm, '• $1');
+                        .replace(/>/g, '&gt;');
+                    
+                    // 换行 → <br>
+                    html = html.replace(/\n/g, '<br>');
+                    
+                    // 加粗 **文字** → <strong>文字</strong>
+                    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                    
+                    // 斜体 *文字* → <em>文字</em>
+                    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+                    
+                    // 链接 [文字](url) → <a href="url">文字</a>
+                    html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                    
+                    // 列表项 - 项目 → 包裹在 <ul> 中
                     var lines = html.split('<br>');
                     var inList = false;
                     var result = [];
                     for (var i = 0; i < lines.length; i++) {
                         var line = lines[i];
-                        if (line.trim().startsWith('•')) {
+                        var trimmed = line.trim();
+                        if (trimmed.match(/^[-•]\s/)) {
                             if (!inList) {
-                                result.push('<ul style="margin:4px 0 4px 20px;padding:0;">');
+                                result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
                                 inList = true;
                             }
-                            result.push('<li style="margin:2px 0;">' + line.trim().substring(1).trim() + '</li>');
+                            var content = trimmed.replace(/^[-•]\s/, '');
+                            // 内容里可能还有加粗/链接
+                            content = content
+                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                            result.push('<li style="margin:2px 0;">' + content + '</li>');
                         } else {
-                            if (inList) { result.push('</ul>'); inList = false; }
-                            result.push(line);
+                            if (inList) {
+                                result.push('</ul>');
+                                inList = false;
+                            }
+                            if (line !== '') {
+                                result.push(line);
+                            }
                         }
                     }
                     if (inList) result.push('</ul>');
+                    
                     return result.join('');
                 },
                 getOrderLevel: function(order) {
@@ -1206,7 +1203,6 @@
                     return Math.min(parts.length - 1, 3);
                 },
 
-                // ===== 分类管理 =====
                 addCategory: function() {
                     if (!this.newCategoryName.trim()) { alert('请输入分类名称'); return; }
                     var id = this.newCategoryName.trim().toLowerCase().replace(/\s+/g, '-');
@@ -1264,7 +1260,6 @@
                     this.saveToGist();
                 },
 
-                // ===== 记录管理 =====
                 saveRecord: function() {
                     if (!this.canSaveQuick) return;
                     var record = {
@@ -1332,7 +1327,6 @@
                     this.saveToGist();
                 },
 
-                // ===== 分类详情页 =====
                 openCategory: function(id) {
                     this.currentCategoryId = id;
                     this.detailMode = true;
@@ -1346,7 +1340,6 @@
                     this.showNewRecordInDetail = false;
                 },
 
-                // ===== 阅读模式 =====
                 openReader: function() {
                     if (this.categoryRecords.length === 0) return;
                     this.readerPage = 0;
@@ -1385,7 +1378,6 @@
                     }
                 },
 
-                // ===== Gist API =====
                 saveToGist: function() {
                     var gistId = this.getGistId();
                     var token = this.getGithubToken();
