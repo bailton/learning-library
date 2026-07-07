@@ -1118,7 +1118,6 @@
                 readerOpen: false,
                 readerPage: 0,
                 tocOpen: true,
-                // 调试
                 showDebug: true,
                 debugStatus: '',
                 testRaw: '第一行\n第二行\n**加粗文字**\n- 列表项1\n- 列表项2',
@@ -1202,47 +1201,66 @@
                 }
             },
             methods: {
-                // ===== 核心渲染方法 =====
+                // ===== ★★★ 修复后的 renderContent ★★★ =====
                 renderContent: function(text) {
                     if (!text) return '';
-                    // 转义 HTML
+                    
+                    // 1. 转义 HTML
                     var html = text
                         .replace(/&/g, '&amp;')
                         .replace(/</g, '&lt;')
                         .replace(/>/g, '&gt;');
-                    // 换行转<br>
-                    html = html.replace(/\n/g, '<br>');
-                    // 加粗 **文字** → <strong>文字</strong>
-                    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-                    // 斜体 *文字* → <em>文字</em>
-                    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-                    // 链接 [文字](url) → <a href="url">文字</a>
-                    html = html.replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                    // 列表 - 项目 → <ul><li>项目</li></ul>
-                    var lines = html.split('<br>');
-                    var inList = false;
+                    
+                    // 2. 按行处理
+                    var lines = html.split('\n');
                     var result = [];
+                    var inList = false;
+                    var listItems = [];
+                    
                     for (var i = 0; i < lines.length; i++) {
                         var line = lines[i];
                         var trimmed = line.trim();
+                        
+                        // 检查是否是列表项
                         if (trimmed.match(/^[-•]\s/)) {
                             if (!inList) {
-                                result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
                                 inList = true;
+                                listItems = [];
                             }
                             var content = trimmed.replace(/^[-•]\s/, '');
                             content = content
                                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                                 .replace(/\*(.+?)\*/g, '<em>$1</em>')
                                 .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                            result.push('<li style="margin:2px 0;">' + content + '</li>');
+                            listItems.push('<li style="margin:2px 0;">' + content + '</li>');
                         } else {
-                            if (inList) { result.push('</ul>'); inList = false; }
-                            if (line !== '') { result.push(line); }
+                            // 非列表行
+                            if (inList) {
+                                result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
+                                result.push(listItems.join(''));
+                                result.push('</ul>');
+                                inList = false;
+                                listItems = [];
+                            }
+                            // 处理非列表行内的格式
+                            var processedLine = line
+                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                            if (processedLine !== '') {
+                                result.push(processedLine);
+                            }
                         }
                     }
-                    if (inList) result.push('</ul>');
-                    return result.join('');
+                    // 处理最后的列表
+                    if (inList) {
+                        result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
+                        result.push(listItems.join(''));
+                        result.push('</ul>');
+                    }
+                    
+                    // ★★★ 用 <br> 连接所有行（保留换行） ★★★
+                    return result.join('<br>');
                 },
 
                 // ===== 调试方法 =====
@@ -1644,7 +1662,6 @@
                 if (this.allCategories.length > 0) {
                     this.newRecordCategory = this.allCategories[0].id;
                 }
-                // 运行调试测试
                 setTimeout(function() {
                     self.runDebugTests();
                 }, 300);
