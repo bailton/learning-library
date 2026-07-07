@@ -1113,7 +1113,7 @@
                 }
             },
             methods: {
-                // ★★★ 修复后的 renderContent - 保留空行 ★★★
+                // ★★★ 修复后的 renderContent - 正确保留空行 ★★★
                 renderContent: function(text) {
                     if (!text) return '';
                     
@@ -1131,11 +1131,14 @@
                         var line = lines[i];
                         var trimmed = line.trim();
                         
+                        // 检测是否是列表项（以 - 或 • 开头）
                         if (trimmed.match(/^[-•]\s/)) {
                             if (!inList) {
+                                // 如果之前不在列表中，先结束之前的列表
                                 inList = true;
                                 listItems = [];
                             }
+                            // 处理列表项内容
                             var content = trimmed.replace(/^[-•]\s/, '');
                             content = content
                                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -1143,27 +1146,39 @@
                                 .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
                             listItems.push('<li style="margin:2px 0;">' + content + '</li>');
                         } else {
+                            // 如果不是列表项
                             if (inList) {
+                                // 结束当前列表
                                 result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
                                 result.push(listItems.join(''));
                                 result.push('</ul>');
                                 inList = false;
                                 listItems = [];
                             }
-                            // ★★★ 保留空行：不过滤空行 ★★★
-                            var processedLine = line
-                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
-                                .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                            result.push(processedLine);
+                            
+                            // ★★★ 核心修复：空行保留 ★★★
+                            // 如果是空行（trim 后为空），直接 push 空字符串
+                            // 这样 join('<br>') 会生成 <br><br>，实现分段效果
+                            if (trimmed === '') {
+                                result.push('');
+                            } else {
+                                var processedLine = line
+                                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                                result.push(processedLine);
+                            }
                         }
                     }
+                    
+                    // 如果最后还有未结束的列表
                     if (inList) {
                         result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
                         result.push(listItems.join(''));
                         result.push('</ul>');
                     }
                     
+                    // 用 <br> 连接所有行，空行会生成连续的 <br>
                     return result.join('<br>');
                 },
 
@@ -1266,7 +1281,7 @@
                         id: 'rec_' + Date.now(),
                         categoryId: this.newRecordCategory || 'uncategorized',
                         title: this.newRecordTitle.trim(),
-                        content: this.newRecordContent.trim(),
+                        content: this.newRecordContent,  // ★★★ 保留原样，不用 trim() ★★★
                         source: this.newRecordSource.trim() || '',
                         order: '',
                         createdAt: new Date().toISOString(),
@@ -1301,7 +1316,7 @@
                 startEditRecord: function() {
                     this.editingRecord = true;
                     this.editTitle = this.currentRecord.title;
-                    this.editContent = this.currentRecord.content;
+                    this.editContent = this.currentRecord.content;  // ★★★ 保留原样 ★★★
                     this.editSource = this.currentRecord.source || '';
                     this.editOrder = this.currentRecord.order || '';
                 },
@@ -1312,7 +1327,7 @@
                     var idx = this.records.findIndex(r => r.id === this.currentRecord.id);
                     if (idx === -1) return;
                     this.records[idx].title = this.editTitle.trim();
-                    this.records[idx].content = this.editContent.trim();
+                    this.records[idx].content = this.editContent;  // ★★★ 保留原样，不用 trim() ★★★
                     this.records[idx].source = this.editSource.trim();
                     this.records[idx].order = this.editOrder.trim();
                     this.records[idx].updatedAt = new Date().toISOString();
