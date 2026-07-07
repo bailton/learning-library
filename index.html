@@ -717,7 +717,6 @@
 <body>
 
 <div id="app">
-    <!-- 头部 -->
     <div class="header">
         <div class="left">
             <h1>📚 Learning Library</h1>
@@ -728,7 +727,6 @@
         </div>
     </div>
 
-    <!-- 配置区 -->
     <div class="config-card">
         <div class="config-row">
             <input type="text" id="gistIdInput" placeholder="Gist ID（如：abc123def456）" />
@@ -741,7 +739,6 @@
         <div class="debug-hint" id="debugHint">💡 请填写 Gist ID 和 GitHub Token，然后点击"连接并同步"</div>
     </div>
 
-    <!-- 主界面 -->
     <div v-if="!detailMode">
 
         <div class="card quick-add">
@@ -789,7 +786,6 @@
         </div>
     </div>
 
-    <!-- 分类详情页 -->
     <div v-else>
         <div class="card">
             <div class="detail-header">
@@ -832,7 +828,6 @@
         </div>
     </div>
 
-    <!-- ===== 分类管理 Modal ===== -->
     <div class="modal-overlay" :class="{ open: showCategoryManager }" @click.self="showCategoryManager = false">
         <div class="modal-content">
             <button class="modal-close" @click="showCategoryManager = false">✕</button>
@@ -862,7 +857,6 @@
         </div>
     </div>
 
-    <!-- ===== 新建记录 Modal ===== -->
     <div class="modal-overlay" :class="{ open: showNewRecordInDetail }" @click.self="showNewRecordInDetail = false">
         <div class="modal-content">
             <button class="modal-close" @click="showNewRecordInDetail = false">✕</button>
@@ -892,7 +886,6 @@
         </div>
     </div>
 
-    <!-- ===== 记录详情 Modal ===== -->
     <div class="modal-overlay" :class="{ open: showRecordDetail }" @click.self="closeRecordDetail">
         <div class="modal-content" v-if="currentRecord">
             <button class="modal-close" @click="closeRecordDetail">✕</button>
@@ -942,7 +935,6 @@
         </div>
     </div>
 
-    <!-- ===== 阅读模式 ===== -->
     <div class="reader-overlay" :class="{ open: readerOpen }">
         <div class="reader-header">
             <span class="title-area">📖 {{ currentCategory.name || '阅读' }}</span>
@@ -1008,7 +1000,6 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
 <script>
     (function() {
-        // ★★★ 关闭 Vue 开发模式提示 ★★★
         Vue.config.productionTip = false;
         Vue.config.devtools = false;
 
@@ -1122,7 +1113,7 @@
                 }
             },
             methods: {
-                // ===== 核心渲染方法 =====
+                // ★★★ 修复后的 renderContent - 保留空行 ★★★
                 renderContent: function(text) {
                     if (!text) return '';
                     
@@ -1159,13 +1150,12 @@
                                 inList = false;
                                 listItems = [];
                             }
+                            // ★★★ 保留空行：不过滤空行 ★★★
                             var processedLine = line
                                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                                 .replace(/\*(.+?)\*/g, '<em>$1</em>')
                                 .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                            if (processedLine !== '') {
-                                result.push(processedLine);
-                            }
+                            result.push(processedLine);
                         }
                     }
                     if (inList) {
