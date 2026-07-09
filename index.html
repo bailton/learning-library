@@ -91,6 +91,29 @@
         .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; }
         .card-title { font-weight: 600; font-size: 0.9rem; color: #64748b; margin-bottom: 12px; letter-spacing: 0.5px; }
 
+        /* ★★★ 工具栏按钮样式 ★★★ */
+        .toolbar-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 2px 14px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #475569;
+            height: 32px;
+            line-height: 1;
+        }
+        .toolbar-btn:hover {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e293b;
+        }
+        .toolbar-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .toolbar-group { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
+        .toolbar-group .hint { font-size: 0.7rem; color: #94a3b8; margin-left: 6px; }
+
         .quick-add .form-row { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; }
         .quick-add .form-row-full { grid-column: 1 / -1; }
         @media (max-width: 600px) {
@@ -209,7 +232,7 @@
             margin-bottom: 16px;
             align-items: center;
         }
-        .view-toggle .btn-group { display: flex; gap: 4px; }
+        .view-toggle .btn-group { display: flex; gap: 4px; flex-wrap: wrap; }
         .view-toggle button {
             background: #e2e8f0;
             border: none;
@@ -228,6 +251,20 @@
             background: #f1f5f9;
         }
         .view-toggle .order-btn.active { background: #3b82f6; color: white; }
+        .view-toggle .filter-btn { font-size: 0.75rem; padding: 4px 10px; background: #f1f5f9; }
+        .view-toggle .filter-btn.active { background: #8b5cf6; color: white; }
+        .view-toggle .filter-btn.active-draft { background: #f59e0b; color: white; }
+
+        /* ★★★ 状态标签 ★★★ */
+        .status-badge {
+            font-size: 0.6rem;
+            padding: 1px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-left: 6px;
+        }
+        .status-badge.published { background: #dcfce7; color: #166534; }
+        .status-badge.draft { background: #fef3c7; color: #92400e; }
 
         .record-list .record-item {
             padding: 10px 14px;
@@ -323,6 +360,7 @@
             border-color: #3b82f6;
             background: white;
         }
+        .modal-field select.edit-input { appearance: auto; }
         .modal-footer-btns {
             display: flex;
             justify-content: flex-end;
@@ -559,6 +597,15 @@
             font-size: 0.7rem;
             min-width: 30px;
         }
+        /* ★★★ 草稿标记 ★★★ */
+        .reader-toc .toc-list .toc-item .draft-tag {
+            font-size: 0.55rem;
+            background: rgba(245,158,11,0.3);
+            color: #fbbf24;
+            padding: 0 8px;
+            border-radius: 12px;
+            margin-left: 4px;
+        }
 
         .reader-content {
             flex: 1;
@@ -756,15 +803,25 @@
                 </div>
             </div>
             <div class="form-row-full">
-                <label>内容（支持 **加粗**、- 列表、[文字](链接)）</label>
-                <textarea v-model="newRecordContent" placeholder="输入内容..." rows="4"></textarea>
+                <label>内容（支持 **加粗**、*斜体*、- 列表、[文字](链接)）</label>
+                <!-- ★★★ 工具栏 ★★★ -->
+                <div class="toolbar-group">
+                    <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'quickContent')">B</button>
+                    <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'quickContent')"><em>I</em></button>
+                    <span class="hint">选中文字后点击</span>
+                </div>
+                <textarea id="quickContent" v-model="newRecordContent" placeholder="输入内容..." rows="4"></textarea>
             </div>
             <div class="form-row">
                 <div>
                     <label>来源（可选）</label>
                     <input v-model="newRecordSource" placeholder="来源..." />
                 </div>
-                <div style="display:flex; align-items:flex-end; justify-content:flex-end;">
+                <div style="display:flex; gap:8px; align-items:flex-end; justify-content:flex-end; flex-wrap:wrap;">
+                    <select v-model="newRecordStatus" style="padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:0.9rem;background:#fafbfc;">
+                        <option value="published">📢 发布</option>
+                        <option value="draft">✏️ 草稿</option>
+                    </select>
                     <button class="btn-save" @click="saveRecord" :disabled="!canSaveQuick">💾 保存</button>
                 </div>
             </div>
@@ -809,6 +866,12 @@
                     <button class="order-btn" :class="{ active: sortDir === 'asc' }" @click="sortDir = 'asc'">↑ 正序</button>
                     <button class="order-btn" :class="{ active: sortDir === 'desc' }" @click="sortDir = 'desc'">↓ 倒序</button>
                 </div>
+                <!-- ★★★ 筛选器：全部 / 已发布 / 草稿 ★★★ -->
+                <div class="btn-group" style="margin-left:8px;">
+                    <button class="filter-btn" :class="{ active: statusFilter === 'all' }" @click="statusFilter = 'all'">全部</button>
+                    <button class="filter-btn" :class="{ active: statusFilter === 'published' }" @click="statusFilter = 'published'">📢 已发布</button>
+                    <button class="filter-btn" :class="{ active: statusFilter === 'draft', 'active-draft': statusFilter === 'draft' }" @click="statusFilter = 'draft'">✏️ 草稿</button>
+                </div>
             </div>
 
             <div class="record-list">
@@ -817,7 +880,12 @@
                 </div>
                 <div v-for="item in sortedRecords" :key="item.id" class="record-item" @click="openRecord(item)">
                     <div class="left">
-                        <div class="title">{{ item.title }}</div>
+                        <div class="title">
+                            {{ item.title }}
+                            <span class="status-badge" :class="item.status === 'draft' ? 'draft' : 'published'">
+                                {{ item.status === 'draft' ? '✏️ 草稿' : '📢 已发布' }}
+                            </span>
+                        </div>
                         <div class="meta">
                             {{ viewMode === 'date' ? formatDate(item.createdAt) : (item.order ? '排序: ' + item.order : '未设置') }}
                         </div>
@@ -873,11 +941,24 @@
             </div>
             <div class="modal-field">
                 <span class="modal-label">内容</span>
-                <textarea class="edit-textarea" v-model="newRecordContent" placeholder="输入内容..." rows="6"></textarea>
+                <!-- ★★★ 编辑弹窗工具栏 ★★★ -->
+                <div class="toolbar-group">
+                    <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'detailContent')">B</button>
+                    <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'detailContent')"><em>I</em></button>
+                    <span class="hint">选中文字后点击</span>
+                </div>
+                <textarea id="detailContent" class="edit-textarea" v-model="newRecordContent" placeholder="输入内容..." rows="6"></textarea>
             </div>
             <div class="modal-field">
                 <span class="modal-label">来源（可选）</span>
                 <input class="edit-input" v-model="newRecordSource" placeholder="来源..." />
+            </div>
+            <div class="modal-field">
+                <span class="modal-label">状态</span>
+                <select class="edit-input" v-model="newRecordStatus">
+                    <option value="published">📢 已发布</option>
+                    <option value="draft">✏️ 草稿</option>
+                </select>
             </div>
             <div class="modal-footer-btns">
                 <button class="btn-edit cancel" @click="showNewRecordInDetail = false">取消</button>
@@ -890,7 +971,12 @@
         <div class="modal-content" v-if="currentRecord">
             <button class="modal-close" @click="closeRecordDetail">✕</button>
             <div v-if="!editingRecord">
-                <h2 style="margin-bottom:8px;">{{ currentRecord.title }}</h2>
+                <h2 style="margin-bottom:8px;">
+                    {{ currentRecord.title }}
+                    <span class="status-badge" :class="currentRecord.status === 'draft' ? 'draft' : 'published'">
+                        {{ currentRecord.status === 'draft' ? '✏️ 草稿' : '📢 已发布' }}
+                    </span>
+                </h2>
                 <div style="font-size:0.8rem; color:#94a3b8; margin-bottom:12px;">
                     {{ formatDate(currentRecord.createdAt) }}
                     <span v-if="currentRecord.source"> · 📎 {{ currentRecord.source }}</span>
@@ -917,7 +1003,13 @@
                 </div>
                 <div class="modal-field">
                     <span class="modal-label">内容</span>
-                    <textarea class="edit-textarea" v-model="editContent" rows="6"></textarea>
+                    <!-- ★★★ 编辑工具栏 ★★★ -->
+                    <div class="toolbar-group">
+                        <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'editContentArea')">B</button>
+                        <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'editContentArea')"><em>I</em></button>
+                        <span class="hint">选中文字后点击</span>
+                    </div>
+                    <textarea id="editContentArea" class="edit-textarea" v-model="editContent" rows="6"></textarea>
                 </div>
                 <div class="modal-field">
                     <span class="modal-label">来源（可选）</span>
@@ -926,6 +1018,13 @@
                 <div class="modal-field">
                     <span class="modal-label">排序（如：1, 1.1, 2.3）</span>
                     <input class="edit-input" v-model="editOrder" placeholder="留空则不排序" />
+                </div>
+                <div class="modal-field">
+                    <span class="modal-label">状态</span>
+                    <select class="edit-input" v-model="editStatus">
+                        <option value="published">📢 已发布</option>
+                        <option value="draft">✏️ 草稿</option>
+                    </select>
                 </div>
                 <div class="modal-footer-btns">
                     <button class="btn-edit cancel" @click="cancelEditRecord">取消</button>
@@ -950,7 +1049,7 @@
                     <div class="toc-item level-0" :class="{ active: readerPage === 0 }" @click="goToPage(0)">
                         📑 目录
                     </div>
-                    <div class="toc-item" v-for="(item, idx) in categoryRecords" :key="item.id" 
+                    <div class="toc-item" v-for="(item, idx) in readerRecords" :key="item.id" 
                          :class="['level-' + getOrderLevel(item.order), { active: readerPage === idx + 1 }]" 
                          @click="goToPage(idx + 1)">
                         <span class="toc-order">{{ item.order || '' }}</span>
@@ -965,12 +1064,12 @@
                         <template v-if="readerPage === 0">
                             <h2 style="color:white;margin-bottom:12px;">📑 目录</h2>
                             <div class="toc-grid">
-                                <div class="toc-item" v-for="(item, idx) in categoryRecords" :key="item.id" @click="goToPage(idx + 1)">
+                                <div class="toc-item" v-for="(item, idx) in readerRecords" :key="item.id" @click="goToPage(idx + 1)">
                                     <span class="order">{{ item.order || '' }}</span>
                                     <span class="title">{{ item.title }}</span>
                                 </div>
                             </div>
-                            <div class="toc-count">共 {{ categoryRecords.length }} 条记录</div>
+                            <div class="toc-count">共 {{ readerRecords.length }} 条记录</div>
                         </template>
                         <template v-else>
                             <div class="page-title">{{ readerItem.title }}</div>
@@ -1018,6 +1117,7 @@
                 newRecordTitle: '',
                 newRecordContent: '',
                 newRecordSource: '',
+                newRecordStatus: 'published',  // ★★★ 新增
                 newCategoryName: '',
                 newCategoryIcon: '📁',
                 showCategoryManager: false,
@@ -1025,6 +1125,7 @@
                 currentCategoryId: null,
                 viewMode: 'date',
                 sortDir: 'desc',
+                statusFilter: 'all',  // ★★★ 新增：全部/已发布/草稿
                 showNewRecordInDetail: false,
                 showRecordDetail: false,
                 currentRecord: null,
@@ -1033,9 +1134,11 @@
                 editContent: '',
                 editSource: '',
                 editOrder: '',
+                editStatus: 'published',  // ★★★ 新增
                 readerOpen: false,
                 readerPage: 0,
-                tocOpen: true
+                tocOpen: true,
+                readerRecords: []  // ★★★ 新增：阅读模式专用列表（过滤草稿）
             },
             computed: {
                 allCategories: function() {
@@ -1054,7 +1157,14 @@
                     return found || { id: '', name: '', icon: '📁' };
                 },
                 categoryRecords: function() {
-                    return this.records.filter(r => r.categoryId === this.currentCategoryId);
+                    var filtered = this.records.filter(r => r.categoryId === this.currentCategoryId);
+                    // ★★★ 按状态筛选 ★★★
+                    if (this.statusFilter === 'published') {
+                        filtered = filtered.filter(r => r.status !== 'draft');
+                    } else if (this.statusFilter === 'draft') {
+                        filtered = filtered.filter(r => r.status === 'draft');
+                    }
+                    return filtered;
                 },
                 sortedRecords: function() {
                     var list = this.categoryRecords.slice();
@@ -1069,9 +1179,17 @@
                         list.sort(function(a, b) {
                             var oa = a.order || '';
                             var ob = b.order || '';
-                            if (!oa && !ob) {
+                            
+                            // ★★★ 空值排到最后 ★★★
+                            var aEmpty = oa === '';
+                            var bEmpty = ob === '';
+                            if (aEmpty && bEmpty) {
                                 return self.sortDir === 'desc' ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
                             }
+                            if (aEmpty) return 1;   // a 空，排在后面
+                            if (bEmpty) return -1;  // b 空，排在后面
+                            
+                            // 都有值，按数字层级比较
                             var partsA = oa.toString().split('.').map(Number);
                             var partsB = ob.toString().split('.').map(Number);
                             var maxLen = Math.max(partsA.length, partsB.length);
@@ -1079,8 +1197,6 @@
                                 var va = partsA[i] || 0;
                                 var vb = partsB[i] || 0;
                                 if (va !== vb) {
-                                    if (i >= partsA.length) return self.sortDir === 'desc' ? 1 : -1;
-                                    if (i >= partsB.length) return self.sortDir === 'desc' ? -1 : 1;
                                     return self.sortDir === 'desc' ? vb - va : va - vb;
                                 }
                             }
@@ -1105,15 +1221,14 @@
                     return '⚪ 未连接';
                 },
                 totalReaderPages: function() {
-                    return 1 + this.categoryRecords.length;
+                    return 1 + this.readerRecords.length;
                 },
                 readerItem: function() {
                     var idx = this.readerPage - 1;
-                    return this.categoryRecords[idx] || null;
+                    return this.readerRecords[idx] || null;
                 }
             },
             methods: {
-                // ★★★ 修复后的 renderContent - 正确保留空行 ★★★
                 renderContent: function(text) {
                     if (!text) return '';
                     
@@ -1131,14 +1246,11 @@
                         var line = lines[i];
                         var trimmed = line.trim();
                         
-                        // 检测是否是列表项（以 - 或 • 开头）
                         if (trimmed.match(/^[-•]\s/)) {
                             if (!inList) {
-                                // 如果之前不在列表中，先结束之前的列表
                                 inList = true;
                                 listItems = [];
                             }
-                            // 处理列表项内容
                             var content = trimmed.replace(/^[-•]\s/, '');
                             content = content
                                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -1146,19 +1258,13 @@
                                 .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
                             listItems.push('<li style="margin:2px 0;">' + content + '</li>');
                         } else {
-                            // 如果不是列表项
                             if (inList) {
-                                // 结束当前列表
                                 result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
                                 result.push(listItems.join(''));
                                 result.push('</ul>');
                                 inList = false;
                                 listItems = [];
                             }
-                            
-                            // ★★★ 核心修复：空行保留 ★★★
-                            // 如果是空行（trim 后为空），直接 push 空字符串
-                            // 这样 join('<br>') 会生成 <br><br>，实现分段效果
                             if (trimmed === '') {
                                 result.push('');
                             } else {
@@ -1171,15 +1277,44 @@
                         }
                     }
                     
-                    // 如果最后还有未结束的列表
                     if (inList) {
                         result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
                         result.push(listItems.join(''));
                         result.push('</ul>');
                     }
                     
-                    // 用 <br> 连接所有行，空行会生成连续的 <br>
                     return result.join('<br>');
+                },
+
+                // ★★★ 工具栏包装方法 ★★★
+                wrapText: function(prefix, suffix, textareaId) {
+                    var active = document.getElementById(textareaId);
+                    if (!active) {
+                        alert('请先点击内容输入框');
+                        return;
+                    }
+                    active.focus();
+                    var start = active.selectionStart;
+                    var end = active.selectionEnd;
+                    if (start === end) {
+                        // 没有选中文字，插入空标记
+                        var before = active.value.substring(0, start);
+                        var after = active.value.substring(end);
+                        active.value = before + prefix + suffix + after;
+                        var newPos = start + prefix.length;
+                        active.selectionStart = active.selectionEnd = newPos;
+                    } else {
+                        var selected = active.value.substring(start, end);
+                        var before = active.value.substring(0, start);
+                        var after = active.value.substring(end);
+                        active.value = before + prefix + selected + suffix + after;
+                        var newPos = start + prefix.length + selected.length + suffix.length;
+                        active.selectionStart = active.selectionEnd = newPos;
+                    }
+                    active.focus();
+                    // 触发 Vue 更新
+                    var event = new Event('input', { bubbles: true });
+                    active.dispatchEvent(event);
                 },
 
                 // ===== Gist 相关 =====
@@ -1281,9 +1416,10 @@
                         id: 'rec_' + Date.now(),
                         categoryId: this.newRecordCategory || 'uncategorized',
                         title: this.newRecordTitle.trim(),
-                        content: this.newRecordContent,  // ★★★ 保留原样，不用 trim() ★★★
+                        content: this.newRecordContent,
                         source: this.newRecordSource.trim() || '',
                         order: '',
+                        status: this.newRecordStatus || 'published',  // ★★★ 新增
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     };
@@ -1291,6 +1427,7 @@
                     this.newRecordTitle = '';
                     this.newRecordContent = '';
                     this.newRecordSource = '';
+                    this.newRecordStatus = 'published';  // ★★★ 重置
                     this.saveToGist();
                 },
                 saveRecordAndClose: function() {
@@ -1316,9 +1453,10 @@
                 startEditRecord: function() {
                     this.editingRecord = true;
                     this.editTitle = this.currentRecord.title;
-                    this.editContent = this.currentRecord.content;  // ★★★ 保留原样 ★★★
+                    this.editContent = this.currentRecord.content;
                     this.editSource = this.currentRecord.source || '';
                     this.editOrder = this.currentRecord.order || '';
+                    this.editStatus = this.currentRecord.status || 'published';  // ★★★ 新增
                 },
                 cancelEditRecord: function() {
                     this.editingRecord = false;
@@ -1327,18 +1465,13 @@
                     var idx = this.records.findIndex(r => r.id === this.currentRecord.id);
                     if (idx === -1) return;
                     this.records[idx].title = this.editTitle.trim();
-                    this.records[idx].content = this.editContent;  // ★★★ 保留原样，不用 trim() ★★★
+                    this.records[idx].content = this.editContent;
                     this.records[idx].source = this.editSource.trim();
                     this.records[idx].order = this.editOrder.trim();
+                    this.records[idx].status = this.editStatus || 'published';  // ★★★ 新增
                     this.records[idx].updatedAt = new Date().toISOString();
                     this.currentRecord = this.records[idx];
                     this.editingRecord = false;
-                    this.saveToGist();
-                },
-                updateOrder: function(item, value) {
-                    var idx = this.records.findIndex(r => r.id === item.id);
-                    if (idx === -1) return;
-                    this.records[idx].order = value.trim();
                     this.saveToGist();
                 },
 
@@ -1348,7 +1481,9 @@
                     this.detailMode = true;
                     this.viewMode = 'date';
                     this.sortDir = 'desc';
+                    this.statusFilter = 'all';  // ★★★ 重置筛选
                     this.newRecordCategory = id;
+                    this.newRecordStatus = 'published';  // ★★★ 重置
                 },
                 closeCategory: function() {
                     this.detailMode = false;
@@ -1358,7 +1493,16 @@
 
                 // ===== 阅读模式 =====
                 openReader: function() {
-                    if (this.categoryRecords.length === 0) return;
+                    // ★★★ 只读已发布的记录 ★★★
+                    var published = this.records.filter(r => 
+                        r.categoryId === this.currentCategoryId && 
+                        r.status !== 'draft'
+                    );
+                    if (published.length === 0) {
+                        alert('当前分类没有已发布的内容');
+                        return;
+                    }
+                    this.readerRecords = published;
                     this.readerPage = 0;
                     this.tocOpen = true;
                     this.readerOpen = true;
@@ -1367,6 +1511,7 @@
                 },
                 closeReader: function() {
                     this.readerOpen = false;
+                    this.readerRecords = [];
                     document.body.style.overflow = '';
                     document.removeEventListener('keydown', this.readerKeyHandler);
                 },
