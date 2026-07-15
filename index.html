@@ -91,7 +91,6 @@
         .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; }
         .card-title { font-weight: 600; font-size: 0.9rem; color: #64748b; margin-bottom: 12px; letter-spacing: 0.5px; }
 
-        /* ★★★ 工具栏按钮样式 ★★★ */
         .toolbar-btn {
             background: #f1f5f9;
             border: 1px solid #e2e8f0;
@@ -110,7 +109,6 @@
             border-color: #3b82f6;
             color: #1e293b;
         }
-        .toolbar-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
         .toolbar-group { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
         .toolbar-group .hint { font-size: 0.7rem; color: #94a3b8; margin-left: 6px; }
 
@@ -255,7 +253,6 @@
         .view-toggle .filter-btn.active { background: #8b5cf6; color: white; }
         .view-toggle .filter-btn.active-draft { background: #f59e0b; color: white; }
 
-        /* ★★★ 状态标签 ★★★ */
         .status-badge {
             font-size: 0.6rem;
             padding: 1px 10px;
@@ -274,16 +271,45 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
         }
         .record-list .record-item:hover { background: #f8fafc; }
-        .record-list .record-item .left .title { font-weight: 500; }
+        .record-list .record-item .left { flex: 1; min-width: 0; }
+        .record-list .record-item .left .title { font-weight: 500; word-break: break-word; }
         .record-list .record-item .left .meta { font-size: 0.75rem; color: #94a3b8; }
+        .record-list .record-item .right-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
         .record-list .record-item .order-badge {
             font-size: 0.7rem;
             color: #94a3b8;
             background: #f1f5f9;
             padding: 2px 10px;
             border-radius: 20px;
+        }
+        /* ★★★ 排序箭头按钮 ★★★ */
+        .record-list .record-item .sort-btn {
+            background: none;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 0 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: 0.2s;
+            line-height: 1.6;
+        }
+        .record-list .record-item .sort-btn:hover {
+            background: #dbeafe;
+            border-color: #3b82f6;
+            color: #1e293b;
+        }
+        .record-list .record-item .sort-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
         .empty-state { text-align: center; color: #94a3b8; padding: 40px 0; }
         .empty-state span { font-size: 2rem; display: block; margin-bottom: 8px; }
@@ -597,15 +623,6 @@
             font-size: 0.7rem;
             min-width: 30px;
         }
-        /* ★★★ 草稿标记 ★★★ */
-        .reader-toc .toc-list .toc-item .draft-tag {
-            font-size: 0.55rem;
-            background: rgba(245,158,11,0.3);
-            color: #fbbf24;
-            padding: 0 8px;
-            border-radius: 12px;
-            margin-left: 4px;
-        }
 
         .reader-content {
             flex: 1;
@@ -804,7 +821,6 @@
             </div>
             <div class="form-row-full">
                 <label>内容（支持 **加粗**、*斜体*、- 列表、[文字](链接)）</label>
-                <!-- ★★★ 工具栏 ★★★ -->
                 <div class="toolbar-group">
                     <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'quickContent')">B</button>
                     <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'quickContent')"><em>I</em></button>
@@ -852,7 +868,7 @@
                     <span class="name">{{ currentCategory.name }}</span>
                 </div>
                 <div class="actions">
-                    <button @click="showNewRecordInDetail = true">➕ 新记录</button>
+                    <button @click="openNewRecordModal">➕ 新记录</button>
                     <button class="btn-read" @click="openReader" v-if="categoryRecords.length > 0">📖 阅读模式</button>
                 </div>
             </div>
@@ -866,7 +882,6 @@
                     <button class="order-btn" :class="{ active: sortDir === 'asc' }" @click="sortDir = 'asc'">↑ 正序</button>
                     <button class="order-btn" :class="{ active: sortDir === 'desc' }" @click="sortDir = 'desc'">↓ 倒序</button>
                 </div>
-                <!-- ★★★ 筛选器：全部 / 已发布 / 草稿 ★★★ -->
                 <div class="btn-group" style="margin-left:8px;">
                     <button class="filter-btn" :class="{ active: statusFilter === 'all' }" @click="statusFilter = 'all'">全部</button>
                     <button class="filter-btn" :class="{ active: statusFilter === 'published' }" @click="statusFilter = 'published'">📢 已发布</button>
@@ -878,8 +893,8 @@
                 <div v-if="categoryRecords.length === 0" class="empty-state">
                     <span>📭</span> 还没有记录，添加一条吧！
                 </div>
-                <div v-for="item in sortedRecords" :key="item.id" class="record-item" @click="openRecord(item)">
-                    <div class="left">
+                <div v-for="(item, index) in sortedRecords" :key="item.id" class="record-item">
+                    <div class="left" @click="openRecord(item)">
                         <div class="title">
                             {{ item.title }}
                             <span class="status-badge" :class="item.status === 'draft' ? 'draft' : 'published'">
@@ -890,15 +905,20 @@
                             {{ viewMode === 'date' ? formatDate(item.createdAt) : (item.order ? '排序: ' + item.order : '未设置') }}
                         </div>
                     </div>
-                    <span class="order-badge">{{ item.source || '无来源' }}</span>
+                    <div class="right-actions">
+                        <span class="order-badge">{{ item.source || '无来源' }}</span>
+                        <!-- ★★★ 排序箭头 ★★★ -->
+                        <button class="sort-btn" @click="moveItemUp(index)" title="上移" :disabled="index === 0">↑</button>
+                        <button class="sort-btn" @click="moveItemDown(index)" title="下移" :disabled="index === sortedRecords.length - 1">↓</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" :class="{ open: showCategoryManager }" @click.self="showCategoryManager = false">
+    <div class="modal-overlay" :class="{ open: showCategoryManager }" @click.self="closeCategoryManager">
         <div class="modal-content">
-            <button class="modal-close" @click="showCategoryManager = false">✕</button>
+            <button class="modal-close" @click="closeCategoryManager">✕</button>
             <h3 style="margin-bottom:16px;">⚙️ 管理分类</h3>
             <div v-for="cat in categories" :key="cat.id" class="cat-mgr-item">
                 <div class="info">
@@ -925,9 +945,9 @@
         </div>
     </div>
 
-    <div class="modal-overlay" :class="{ open: showNewRecordInDetail }" @click.self="showNewRecordInDetail = false">
+    <div class="modal-overlay" :class="{ open: showNewRecordInDetail }" @click.self="closeNewRecordModal">
         <div class="modal-content">
-            <button class="modal-close" @click="showNewRecordInDetail = false">✕</button>
+            <button class="modal-close" @click="closeNewRecordModal">✕</button>
             <h3 style="margin-bottom:16px;">📝 新建记录</h3>
             <div class="modal-field">
                 <span class="modal-label">分类</span>
@@ -941,7 +961,6 @@
             </div>
             <div class="modal-field">
                 <span class="modal-label">内容</span>
-                <!-- ★★★ 编辑弹窗工具栏 ★★★ -->
                 <div class="toolbar-group">
                     <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'detailContent')">B</button>
                     <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'detailContent')"><em>I</em></button>
@@ -961,7 +980,7 @@
                 </select>
             </div>
             <div class="modal-footer-btns">
-                <button class="btn-edit cancel" @click="showNewRecordInDetail = false">取消</button>
+                <button class="btn-edit cancel" @click="closeNewRecordModal">取消</button>
                 <button class="btn-save-edit" @click="saveRecordAndClose">💾 保存</button>
             </div>
         </div>
@@ -1003,7 +1022,6 @@
                 </div>
                 <div class="modal-field">
                     <span class="modal-label">内容</span>
-                    <!-- ★★★ 编辑工具栏 ★★★ -->
                     <div class="toolbar-group">
                         <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'editContentArea')">B</button>
                         <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'editContentArea')"><em>I</em></button>
@@ -1017,7 +1035,8 @@
                 </div>
                 <div class="modal-field">
                     <span class="modal-label">排序（如：1, 1.1, 2.3）</span>
-                    <input class="edit-input" v-model="editOrder" placeholder="留空则不排序" />
+                    <input class="edit-input" v-model="editOrder" placeholder="留空则自动编号" />
+                    <div style="font-size:0.7rem;color:#94a3b8;margin-top:2px;">💡 留空会自动分配序号，也可以用 ↑↓ 按钮调整</div>
                 </div>
                 <div class="modal-field">
                     <span class="modal-label">状态</span>
@@ -1117,7 +1136,7 @@
                 newRecordTitle: '',
                 newRecordContent: '',
                 newRecordSource: '',
-                newRecordStatus: 'published',  // ★★★ 新增
+                newRecordStatus: 'published',
                 newCategoryName: '',
                 newCategoryIcon: '📁',
                 showCategoryManager: false,
@@ -1125,7 +1144,7 @@
                 currentCategoryId: null,
                 viewMode: 'date',
                 sortDir: 'desc',
-                statusFilter: 'all',  // ★★★ 新增：全部/已发布/草稿
+                statusFilter: 'all',
                 showNewRecordInDetail: false,
                 showRecordDetail: false,
                 currentRecord: null,
@@ -1134,11 +1153,13 @@
                 editContent: '',
                 editSource: '',
                 editOrder: '',
-                editStatus: 'published',  // ★★★ 新增
+                editStatus: 'published',
                 readerOpen: false,
                 readerPage: 0,
                 tocOpen: true,
-                readerRecords: []  // ★★★ 新增：阅读模式专用列表（过滤草稿）
+                readerRecords: [],
+                // ★★★ 防误触：记录弹窗内容是否已修改 ★★★
+                _hasUnsavedChanges: false
             },
             computed: {
                 allCategories: function() {
@@ -1158,7 +1179,6 @@
                 },
                 categoryRecords: function() {
                     var filtered = this.records.filter(r => r.categoryId === this.currentCategoryId);
-                    // ★★★ 按状态筛选 ★★★
                     if (this.statusFilter === 'published') {
                         filtered = filtered.filter(r => r.status !== 'draft');
                     } else if (this.statusFilter === 'draft') {
@@ -1180,16 +1200,14 @@
                             var oa = a.order || '';
                             var ob = b.order || '';
                             
-                            // ★★★ 空值排到最后 ★★★
                             var aEmpty = oa === '';
                             var bEmpty = ob === '';
                             if (aEmpty && bEmpty) {
                                 return self.sortDir === 'desc' ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
                             }
-                            if (aEmpty) return 1;   // a 空，排在后面
-                            if (bEmpty) return -1;  // b 空，排在后面
+                            if (aEmpty) return 1;
+                            if (bEmpty) return -1;
                             
-                            // 都有值，按数字层级比较
                             var partsA = oa.toString().split('.').map(Number);
                             var partsB = ob.toString().split('.').map(Number);
                             var maxLen = Math.max(partsA.length, partsB.length);
@@ -1229,6 +1247,30 @@
                 }
             },
             methods: {
+                // ★★★ 弹窗关闭防误触 ★★★
+                closeCategoryManager: function() {
+                    this.showCategoryManager = false;
+                },
+                closeNewRecordModal: function() {
+                    if (this.newRecordTitle.trim() || this.newRecordContent.trim()) {
+                        if (!confirm('内容尚未保存，确定关闭吗？')) return;
+                    }
+                    this.showNewRecordInDetail = false;
+                    // 重置表单
+                    this.newRecordTitle = '';
+                    this.newRecordContent = '';
+                    this.newRecordSource = '';
+                    this.newRecordStatus = 'published';
+                },
+                openNewRecordModal: function() {
+                    this.newRecordCategory = this.currentCategoryId;
+                    this.newRecordTitle = '';
+                    this.newRecordContent = '';
+                    this.newRecordSource = '';
+                    this.newRecordStatus = 'published';
+                    this.showNewRecordInDetail = true;
+                },
+
                 renderContent: function(text) {
                     if (!text) return '';
                     
@@ -1286,7 +1328,6 @@
                     return result.join('<br>');
                 },
 
-                // ★★★ 工具栏包装方法 ★★★
                 wrapText: function(prefix, suffix, textareaId) {
                     var active = document.getElementById(textareaId);
                     if (!active) {
@@ -1297,7 +1338,6 @@
                     var start = active.selectionStart;
                     var end = active.selectionEnd;
                     if (start === end) {
-                        // 没有选中文字，插入空标记
                         var before = active.value.substring(0, start);
                         var after = active.value.substring(end);
                         active.value = before + prefix + suffix + after;
@@ -1312,9 +1352,55 @@
                         active.selectionStart = active.selectionEnd = newPos;
                     }
                     active.focus();
-                    // 触发 Vue 更新
                     var event = new Event('input', { bubbles: true });
                     active.dispatchEvent(event);
+                },
+
+                // ★★★ 排序箭头：上移 ★★★
+                moveItemUp: function(index) {
+                    if (index === 0) return;
+                    var list = this.sortedRecords;
+                    var itemA = list[index];
+                    var itemB = list[index - 1];
+                    // 交换 order 值
+                    var tempOrder = itemA.order;
+                    var aIdx = this.records.findIndex(r => r.id === itemA.id);
+                    var bIdx = this.records.findIndex(r => r.id === itemB.id);
+                    if (aIdx === -1 || bIdx === -1) return;
+                    
+                    // 如果两者都没有 order，或者其中一个没有，分配自动编号
+                    if (!itemA.order && !itemB.order) {
+                        // 简单交换位置：给它们分配相邻序号
+                        var baseOrder = (index + 1).toString();
+                        this.records[aIdx].order = baseOrder;
+                        this.records[bIdx].order = (index).toString();
+                    } else {
+                        this.records[aIdx].order = itemB.order;
+                        this.records[bIdx].order = itemA.order;
+                    }
+                    this.saveToGist();
+                },
+                // ★★★ 排序箭头：下移 ★★★
+                moveItemDown: function(index) {
+                    var list = this.sortedRecords;
+                    if (index >= list.length - 1) return;
+                    this.moveItemUp(index + 1);
+                },
+
+                // ★★★ 自动编号：新增记录时自动分配 ★★★
+                getNextOrder: function(categoryId) {
+                    var records = this.records.filter(r => r.categoryId === categoryId);
+                    var maxOrder = 0;
+                    for (var i = 0; i < records.length; i++) {
+                        var ord = records[i].order;
+                        if (ord) {
+                            var num = parseFloat(ord);
+                            if (!isNaN(num) && num > maxOrder) {
+                                maxOrder = num;
+                            }
+                        }
+                    }
+                    return (maxOrder + 1).toString();
                 },
 
                 // ===== Gist 相关 =====
@@ -1412,14 +1498,15 @@
                 // ===== 记录管理 =====
                 saveRecord: function() {
                     if (!this.canSaveQuick) return;
+                    var order = this.getNextOrder(this.newRecordCategory || 'uncategorized');
                     var record = {
                         id: 'rec_' + Date.now(),
                         categoryId: this.newRecordCategory || 'uncategorized',
                         title: this.newRecordTitle.trim(),
                         content: this.newRecordContent,
                         source: this.newRecordSource.trim() || '',
-                        order: '',
-                        status: this.newRecordStatus || 'published',  // ★★★ 新增
+                        order: order,
+                        status: this.newRecordStatus || 'published',
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     };
@@ -1427,7 +1514,7 @@
                     this.newRecordTitle = '';
                     this.newRecordContent = '';
                     this.newRecordSource = '';
-                    this.newRecordStatus = 'published';  // ★★★ 重置
+                    this.newRecordStatus = 'published';
                     this.saveToGist();
                 },
                 saveRecordAndClose: function() {
@@ -1446,6 +1533,9 @@
                     this.showRecordDetail = true;
                 },
                 closeRecordDetail: function() {
+                    if (this.editingRecord) {
+                        if (!confirm('编辑尚未保存，确定关闭吗？')) return;
+                    }
                     this.showRecordDetail = false;
                     this.currentRecord = null;
                     this.editingRecord = false;
@@ -1456,9 +1546,16 @@
                     this.editContent = this.currentRecord.content;
                     this.editSource = this.currentRecord.source || '';
                     this.editOrder = this.currentRecord.order || '';
-                    this.editStatus = this.currentRecord.status || 'published';  // ★★★ 新增
+                    this.editStatus = this.currentRecord.status || 'published';
                 },
                 cancelEditRecord: function() {
+                    if (this.editTitle !== this.currentRecord.title || 
+                        this.editContent !== this.currentRecord.content ||
+                        this.editSource !== (this.currentRecord.source || '') ||
+                        this.editOrder !== (this.currentRecord.order || '') ||
+                        this.editStatus !== (this.currentRecord.status || 'published')) {
+                        if (!confirm('有未保存的修改，确定取消吗？')) return;
+                    }
                     this.editingRecord = false;
                 },
                 saveEditRecord: function() {
@@ -1467,8 +1564,13 @@
                     this.records[idx].title = this.editTitle.trim();
                     this.records[idx].content = this.editContent;
                     this.records[idx].source = this.editSource.trim();
-                    this.records[idx].order = this.editOrder.trim();
-                    this.records[idx].status = this.editStatus || 'published';  // ★★★ 新增
+                    // 如果用户手动输入了 order，使用输入的；否则自动编号
+                    if (this.editOrder.trim()) {
+                        this.records[idx].order = this.editOrder.trim();
+                    } else {
+                        this.records[idx].order = this.getNextOrder(this.currentRecord.categoryId);
+                    }
+                    this.records[idx].status = this.editStatus || 'published';
                     this.records[idx].updatedAt = new Date().toISOString();
                     this.currentRecord = this.records[idx];
                     this.editingRecord = false;
@@ -1481,9 +1583,9 @@
                     this.detailMode = true;
                     this.viewMode = 'date';
                     this.sortDir = 'desc';
-                    this.statusFilter = 'all';  // ★★★ 重置筛选
+                    this.statusFilter = 'all';
                     this.newRecordCategory = id;
-                    this.newRecordStatus = 'published';  // ★★★ 重置
+                    this.newRecordStatus = 'published';
                 },
                 closeCategory: function() {
                     this.detailMode = false;
@@ -1493,7 +1595,6 @@
 
                 // ===== 阅读模式 =====
                 openReader: function() {
-                    // ★★★ 只读已发布的记录 ★★★
                     var published = this.records.filter(r => 
                         r.categoryId === this.currentCategoryId && 
                         r.status !== 'draft'
@@ -1502,18 +1603,40 @@
                         alert('当前分类没有已发布的内容');
                         return;
                     }
+                    // 按 order 排序
+                    published.sort(function(a, b) {
+                        var oa = a.order || '';
+                        var ob = b.order || '';
+                        if (oa === '' && ob === '') return 0;
+                        if (oa === '') return 1;
+                        if (ob === '') return -1;
+                        var partsA = oa.toString().split('.').map(Number);
+                        var partsB = ob.toString().split('.').map(Number);
+                        for (var i = 0; i < Math.max(partsA.length, partsB.length); i++) {
+                            var va = partsA[i] || 0;
+                            var vb = partsB[i] || 0;
+                            if (va !== vb) return va - vb;
+                        }
+                        return 0;
+                    });
                     this.readerRecords = published;
                     this.readerPage = 0;
                     this.tocOpen = true;
                     this.readerOpen = true;
                     document.body.style.overflow = 'hidden';
-                    document.addEventListener('keydown', this.readerKeyHandler);
+                    // ★★★ 使用命名函数以便正确移除 ★★★
+                    this._readerKeyHandler = this.readerKeyHandler.bind(this);
+                    document.addEventListener('keydown', this._readerKeyHandler);
                 },
                 closeReader: function() {
                     this.readerOpen = false;
                     this.readerRecords = [];
                     document.body.style.overflow = '';
-                    document.removeEventListener('keydown', this.readerKeyHandler);
+                    // ★★★ 正确移除事件 ★★★
+                    if (this._readerKeyHandler) {
+                        document.removeEventListener('keydown', this._readerKeyHandler);
+                        this._readerKeyHandler = null;
+                    }
                 },
                 readerNext: function() {
                     if (this.readerPage < this.totalReaderPages - 1) {
