@@ -290,7 +290,6 @@
             padding: 2px 10px;
             border-radius: 20px;
         }
-        /* ★★★ 排序箭头按钮 ★★★ */
         .record-list .record-item .sort-btn {
             background: none;
             border: 1px solid #e2e8f0;
@@ -505,6 +504,7 @@
         }
         .order-edit-input:focus { outline: none; border-color: #3b82f6; }
 
+        /* ★★★ 阅读模式 - 使用 v-show + 更快的过渡 ★★★ */
         .reader-overlay {
             position: fixed;
             top: 0;
@@ -517,12 +517,18 @@
             flex-direction: column;
             padding: 16px 20px;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.2s ease;
         }
         .reader-overlay.open {
             display: flex;
             opacity: 1;
         }
+        /* ★★★ 关闭中的状态 - 立即隐藏内容，只做淡出 ★★★ */
+        .reader-overlay.closing {
+            pointer-events: none;
+            opacity: 0;
+        }
+
         .reader-header {
             display: flex;
             justify-content: space-between;
@@ -907,7 +913,6 @@
                     </div>
                     <div class="right-actions">
                         <span class="order-badge">{{ item.source || '无来源' }}</span>
-                        <!-- ★★★ 排序箭头 ★★★ -->
                         <button class="sort-btn" @click="moveItemUp(index)" title="上移" :disabled="index === 0">↑</button>
                         <button class="sort-btn" @click="moveItemDown(index)" title="下移" :disabled="index === sortedRecords.length - 1">↓</button>
                     </div>
@@ -1053,7 +1058,8 @@
         </div>
     </div>
 
-    <div class="reader-overlay" :class="{ open: readerOpen }">
+    <!-- ★★★ 阅读模式 - 使用 v-show 提高关闭速度 ★★★ -->
+    <div class="reader-overlay" :class="{ open: readerOpen, closing: isClosing }" v-show="readerOpen || isClosing">
         <div class="reader-header">
             <span class="title-area">📖 {{ currentCategory.name || '阅读' }}</span>
             <button class="close-btn" @click="closeReader">✕ 关闭</button>
@@ -1154,12 +1160,14 @@
                 editSource: '',
                 editOrder: '',
                 editStatus: 'published',
+                // ★★★ 阅读模式相关 ★★★
                 readerOpen: false,
+                isClosing: false,          // ★★★ 关闭动画状态
                 readerPage: 0,
                 tocOpen: true,
                 readerRecords: [],
-                // ★★★ 防误触：记录弹窗内容是否已修改 ★★★
-                _hasUnsavedChanges: false
+                _readerKeyHandler: null,   // ★★★ 键盘事件处理器引用
+                _closeTimer: null          // ★★★ 关闭定时器
             },
             computed: {
                 allCategories: function() {
@@ -1247,7 +1255,6 @@
                 }
             },
             methods: {
-                // ★★★ 弹窗关闭防误触 ★★★
                 closeCategoryManager: function() {
                     this.showCategoryManager = false;
                 },
@@ -1256,7 +1263,6 @@
                         if (!confirm('内容尚未保存，确定关闭吗？')) return;
                     }
                     this.showNewRecordInDetail = false;
-                    // 重置表单
                     this.newRecordTitle = '';
                     this.newRecordContent = '';
                     this.newRecordSource = '';
@@ -1356,21 +1362,16 @@
                     active.dispatchEvent(event);
                 },
 
-                // ★★★ 排序箭头：上移 ★★★
                 moveItemUp: function(index) {
                     if (index === 0) return;
                     var list = this.sortedRecords;
                     var itemA = list[index];
                     var itemB = list[index - 1];
-                    // 交换 order 值
-                    var tempOrder = itemA.order;
                     var aIdx = this.records.findIndex(r => r.id === itemA.id);
                     var bIdx = this.records.findIndex(r => r.id === itemB.id);
                     if (aIdx === -1 || bIdx === -1) return;
                     
-                    // 如果两者都没有 order，或者其中一个没有，分配自动编号
                     if (!itemA.order && !itemB.order) {
-                        // 简单交换位置：给它们分配相邻序号
                         var baseOrder = (index + 1).toString();
                         this.records[aIdx].order = baseOrder;
                         this.records[bIdx].order = (index).toString();
@@ -1380,14 +1381,12 @@
                     }
                     this.saveToGist();
                 },
-                // ★★★ 排序箭头：下移 ★★★
                 moveItemDown: function(index) {
                     var list = this.sortedRecords;
                     if (index >= list.length - 1) return;
                     this.moveItemUp(index + 1);
                 },
 
-                // ★★★ 自动编号：新增记录时自动分配 ★★★
                 getNextOrder: function(categoryId) {
                     var records = this.records.filter(r => r.categoryId === categoryId);
                     var maxOrder = 0;
@@ -1564,7 +1563,6 @@
                     this.records[idx].title = this.editTitle.trim();
                     this.records[idx].content = this.editContent;
                     this.records[idx].source = this.editSource.trim();
-                    // 如果用户手动输入了 order，使用输入的；否则自动编号
                     if (this.editOrder.trim()) {
                         this.records[idx].order = this.editOrder.trim();
                     } else {
@@ -1593,7 +1591,7 @@
                     this.showNewRecordInDetail = false;
                 },
 
-                // ===== 阅读模式 =====
+                // ===== ★★★ 阅读模式 - 彻底修复 ★★★ =====
                 openReader: function() {
                     var published = this.records.filter(r => 
                         r.categoryId === this.currentCategoryId && 
@@ -1619,25 +1617,55 @@
                         }
                         return 0;
                     });
+                    
+                    // 先重置状态
                     this.readerRecords = published;
                     this.readerPage = 0;
                     this.tocOpen = true;
-                    this.readerOpen = true;
-                    document.body.style.overflow = 'hidden';
-                    // ★★★ 使用命名函数以便正确移除 ★★★
+                    this.isClosing = false;
+                    
+                    // 绑定键盘事件
+                    if (this._readerKeyHandler) {
+                        document.removeEventListener('keydown', this._readerKeyHandler);
+                    }
                     this._readerKeyHandler = this.readerKeyHandler.bind(this);
                     document.addEventListener('keydown', this._readerKeyHandler);
+                    
+                    // 最后打开
+                    this.readerOpen = true;
+                    document.body.style.overflow = 'hidden';
                 },
+
                 closeReader: function() {
-                    this.readerOpen = false;
-                    this.readerRecords = [];
-                    document.body.style.overflow = '';
-                    // ★★★ 正确移除事件 ★★★
+                    // 防止重复关闭
+                    if (this.isClosing) return;
+                    this.isClosing = true;
+                    
+                    // ★★★ 立即移除键盘事件 ★★★
                     if (this._readerKeyHandler) {
                         document.removeEventListener('keydown', this._readerKeyHandler);
                         this._readerKeyHandler = null;
                     }
+                    
+                    // 恢复滚动
+                    document.body.style.overflow = '';
+                    
+                    // ★★★ 清除之前的定时器 ★★★
+                    if (this._closeTimer) {
+                        clearTimeout(this._closeTimer);
+                        this._closeTimer = null;
+                    }
+                    
+                    // ★★★ 200ms 后彻底关闭（过渡动画 200ms） ★★★
+                    this._closeTimer = setTimeout(function() {
+                        this.readerOpen = false;
+                        this.isClosing = false;
+                        this.readerRecords = [];
+                        this.readerPage = 0;
+                        this._closeTimer = null;
+                    }.bind(this), 200);
                 },
+
                 readerNext: function() {
                     if (this.readerPage < this.totalReaderPages - 1) {
                         this.readerPage++;
@@ -1652,6 +1680,9 @@
                     this.readerPage = page;
                 },
                 readerKeyHandler: function(e) {
+                    // ★★★ 如果正在关闭，忽略所有按键 ★★★
+                    if (this.isClosing || !this.readerOpen) return;
+                    
                     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
                         e.preventDefault();
                         this.readerNext();
