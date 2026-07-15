@@ -91,7 +91,6 @@
         .card { background: white; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 24px; }
         .card-title { font-weight: 600; font-size: 0.9rem; color: #64748b; margin-bottom: 12px; letter-spacing: 0.5px; }
 
-        /* ★★★ 工具栏按钮样式 ★★★ */
         .toolbar-btn {
             background: #f1f5f9;
             border: 1px solid #e2e8f0;
@@ -138,7 +137,6 @@
             margin-left: 4px;
         }
 
-        /* ★★★ 表格插入弹窗 ★★★ */
         .table-modal-overlay {
             position: fixed;
             top: 0;
@@ -457,14 +455,12 @@
         .modal-field .value strong { color: #1e293b; }
         .modal-field .value em { color: #475569; }
         .modal-field .value a { color: #3b82f6; text-decoration: underline; }
-        /* ★★★ 高亮样式 ★★★ */
         .modal-field .value .highlight {
             background: #fef08a;
             padding: 1px 4px;
             border-radius: 3px;
             color: #1e293b;
         }
-        /* ★★★ 表格样式 ★★★ */
         .modal-field .value table {
             border-collapse: collapse;
             width: 100%;
@@ -622,7 +618,6 @@
         }
         .order-edit-input:focus { outline: none; border-color: #3b82f6; }
 
-        /* ★★★ 阅读模式 - 添加高亮和表格支持 ★★★ */
         .reader-overlay {
             position: fixed;
             top: 0;
@@ -980,28 +975,15 @@
             </div>
             <div class="form-row-full">
                 <label>内容</label>
-                <!-- ★★★ 完整工具栏 ★★★ -->
                 <div class="toolbar-group">
-                    <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'quickContent')" title="加粗">
-                        <span class="label">B</span>
-                    </button>
-                    <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'quickContent')" title="斜体">
-                        <span class="label"><em>I</em></span>
-                    </button>
-                    <button type="button" class="toolbar-btn" @click="wrapText('==', '==', 'quickContent')" title="高亮">
-                        <span style="background:#fef08a;padding:0 4px;border-radius:2px;color:#1e293b;">H</span>
-                    </button>
+                    <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'quickContent')" title="加粗"><span class="label">B</span></button>
+                    <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'quickContent')" title="斜体"><span class="label"><em>I</em></span></button>
+                    <button type="button" class="toolbar-btn" @click="wrapText('==', '==', 'quickContent')" title="高亮"><span style="background:#fef08a;padding:0 4px;border-radius:2px;color:#1e293b;">H</span></button>
                     <span class="divider"></span>
-                    <button type="button" class="toolbar-btn" @click="insertBulletList('quickContent')" title="无序列表">
-                        <span class="icon">•</span>
-                    </button>
-                    <button type="button" class="toolbar-btn" @click="openTableModal('quickContent')" title="插入表格">
-                        <span class="icon">⊞</span>
-                    </button>
+                    <button type="button" class="toolbar-btn" @click="insertBulletList('quickContent')" title="无序列表"><span class="icon">•</span></button>
+                    <button type="button" class="toolbar-btn" @click="openTableModal('quickContent')" title="插入表格"><span class="icon">⊞</span></button>
                     <span class="divider"></span>
-                    <button type="button" class="toolbar-btn" @click="wrapText('[', '](url)', 'quickContent')" title="链接">
-                        <span class="icon">🔗</span>
-                    </button>
+                    <button type="button" class="toolbar-btn" @click="wrapText('[', '](url)', 'quickContent')" title="链接"><span class="icon">🔗</span></button>
                     <span class="hint">选中文字后点击</span>
                 </div>
                 <textarea id="quickContent" v-model="newRecordContent" placeholder="支持 **加粗**、*斜体*、==高亮==、- 列表、[文字](链接)、表格..." rows="4"></textarea>
@@ -1093,7 +1075,6 @@
         </div>
     </div>
 
-    <!-- 分类管理弹窗 -->
     <div class="modal-overlay" :class="{ open: showCategoryManager }" @click.self="closeCategoryManager">
         <div class="modal-content">
             <button class="modal-close" @click="closeCategoryManager">✕</button>
@@ -1123,7 +1104,6 @@
         </div>
     </div>
 
-    <!-- 新建记录弹窗 -->
     <div class="modal-overlay" :class="{ open: showNewRecordInDetail }" @click.self="closeNewRecordModal">
         <div class="modal-content">
             <button class="modal-close" @click="closeNewRecordModal">✕</button>
@@ -1140,7 +1120,6 @@
             </div>
             <div class="modal-field">
                 <span class="modal-label">内容</span>
-                <!-- ★★★ 新建弹窗工具栏 ★★★ -->
                 <div class="toolbar-group">
                     <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'detailContent')" title="加粗">B</button>
                     <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'detailContent')" title="斜体"><em>I</em></button>
@@ -1172,7 +1151,6 @@
         </div>
     </div>
 
-    <!-- 记录详情弹窗 -->
     <div class="modal-overlay" :class="{ open: showRecordDetail }" @click.self="closeRecordDetail">
         <div class="modal-content" v-if="currentRecord">
             <button class="modal-close" @click="closeRecordDetail">✕</button>
@@ -1209,7 +1187,6 @@
                 </div>
                 <div class="modal-field">
                     <span class="modal-label">内容</span>
-                    <!-- ★★★ 编辑弹窗工具栏 ★★★ -->
                     <div class="toolbar-group">
                         <button type="button" class="toolbar-btn" @click="wrapText('**', '**', 'editContentArea')" title="加粗">B</button>
                         <button type="button" class="toolbar-btn" @click="wrapText('*', '*', 'editContentArea')" title="斜体"><em>I</em></button>
@@ -1247,7 +1224,6 @@
         </div>
     </div>
 
-    <!-- ★★★ 表格插入弹窗 ★★★ -->
     <div class="table-modal-overlay" :class="{ open: showTableModal }" @click.self="closeTableModal">
         <div class="table-modal-content">
             <h3>📊 插入表格</h3>
@@ -1267,7 +1243,6 @@
         </div>
     </div>
 
-    <!-- ★★★ 阅读模式 ★★★ -->
     <div class="reader-overlay" :class="{ open: readerOpen && !isClosing, closing: isClosing }" v-show="readerOpen || isClosing">
         <div class="reader-header">
             <span class="title-area">📖 {{ currentCategory.name || '阅读' }}</span>
@@ -1376,7 +1351,6 @@
                 readerRecords: [],
                 _readerKeyHandler: null,
                 _closeTimer: null,
-                // ★★★ 表格弹窗 ★★★
                 showTableModal: false,
                 tableCols: 3,
                 tableRows: 3,
@@ -1468,7 +1442,6 @@
                 }
             },
             methods: {
-                // ===== 弹窗控制 =====
                 closeCategoryManager: function() {
                     this.showCategoryManager = false;
                 },
@@ -1491,7 +1464,7 @@
                     this.showNewRecordInDetail = true;
                 },
 
-                // ★★★ 渲染内容 - 支持高亮和表格 ★★★
+                // ★★★ 修复后的 renderContent - 按顺序处理 ★★★
                 renderContent: function(text) {
                     if (!text) return '';
                     
@@ -1502,135 +1475,143 @@
                     
                     var lines = html.split('\n');
                     var result = [];
-                    var inList = false;
-                    var listItems = [];
-                    var inTable = false;
-                    var tableRows = [];
-                    var tableCols = 0;
+                    var i = 0;
                     
-                    for (var i = 0; i < lines.length; i++) {
+                    while (i < lines.length) {
                         var line = lines[i];
                         var trimmed = line.trim();
                         
-                        // ★★★ 检测表格：以 | 开头和结尾 ★★★
+                        // ★★★ 优先检测表格（连续多行以 | 开头和结尾） ★★★
                         if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
-                            var cells = trimmed.slice(1, -1).split('|').map(function(c) { return c.trim(); });
-                            var isSeparator = cells.every(function(c) { return /^[-:]+$/.test(c); });
-                            
-                            if (!inTable) {
-                                inTable = true;
-                                tableRows = [];
-                                tableCols = cells.length;
-                            }
-                            
-                            if (isSeparator) {
-                                // 分隔行，跳过
-                                continue;
-                            }
-                            
-                            // 处理单元格内容
-                            var processedCells = cells.map(function(c) {
-                                return c
-                                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-                                    .replace(/==(.+?)==/g, '<span class="highlight">$1</span>')
-                                    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                            });
-                            tableRows.push(processedCells);
-                        } else {
-                            // 不是表格行
-                            if (inTable) {
-                                // 结束表格
-                                if (tableRows.length > 0) {
-                                    var headerRow = tableRows[0];
-                                    var bodyRows = tableRows.slice(1);
-                                    var tableHtml = '<table>';
-                                    tableHtml += '<thead><tr>';
-                                    for (var j = 0; j < headerRow.length; j++) {
-                                        tableHtml += '<th>' + (headerRow[j] || '') + '</th>';
-                                    }
-                                    tableHtml += '</tr></thead><tbody>';
-                                    for (var k = 0; k < bodyRows.length; k++) {
-                                        tableHtml += '<tr>';
-                                        for (var l = 0; l < tableCols; l++) {
-                                            tableHtml += '<td>' + (bodyRows[k][l] || '') + '</td>';
-                                        }
-                                        tableHtml += '</tr>';
-                                    }
-                                    tableHtml += '</tbody></table>';
-                                    result.push(tableHtml);
-                                }
-                                inTable = false;
-                                tableRows = [];
-                                tableCols = 0;
-                            }
-                            
-                            if (trimmed.match(/^[-•]\s/)) {
-                                if (!inList) {
-                                    inList = true;
-                                    listItems = [];
-                                }
-                                var content = trimmed.replace(/^[-•]\s/, '');
-                                content = content
-                                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-                                    .replace(/==(.+?)==/g, '<span class="highlight">$1</span>')
-                                    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                                listItems.push('<li style="margin:2px 0;">' + content + '</li>');
-                            } else {
-                                if (inList) {
-                                    result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
-                                    result.push(listItems.join(''));
-                                    result.push('</ul>');
-                                    inList = false;
-                                    listItems = [];
-                                }
-                                if (trimmed === '') {
-                                    result.push('');
+                            var tableLines = [];
+                            var j = i;
+                            while (j < lines.length) {
+                                var t = lines[j].trim();
+                                if (t.startsWith('|') && t.endsWith('|')) {
+                                    tableLines.push(lines[j]);
+                                    j++;
                                 } else {
-                                    var processedLine = line
+                                    break;
+                                }
+                            }
+                            var tableHtml = this._parseTable(tableLines);
+                            if (tableHtml) {
+                                result.push(tableHtml);
+                            }
+                            i = j;
+                            continue;
+                        }
+                        
+                        // ★★★ 检测列表（连续多行以 - 或 • 开头） ★★★
+                        if (trimmed.match(/^[-•]\s/)) {
+                            var listItems = [];
+                            var j = i;
+                            while (j < lines.length) {
+                                var t = lines[j].trim();
+                                if (t.match(/^[-•]\s/)) {
+                                    var content = t.replace(/^[-•]\s/, '')
                                         .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                                         .replace(/\*(.+?)\*/g, '<em>$1</em>')
                                         .replace(/==(.+?)==/g, '<span class="highlight">$1</span>')
                                         .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
-                                    result.push(processedLine);
+                                    listItems.push('<li style="margin:2px 0;">' + content + '</li>');
+                                    j++;
+                                } else {
+                                    break;
                                 }
                             }
-                        }
-                    }
-                    
-                    // 处理末尾未结束的表格
-                    if (inTable && tableRows.length > 0) {
-                        var headerRow = tableRows[0];
-                        var bodyRows = tableRows.slice(1);
-                        var tableHtml = '<table>';
-                        tableHtml += '<thead><tr>';
-                        for (var m = 0; m < headerRow.length; m++) {
-                            tableHtml += '<th>' + (headerRow[m] || '') + '</th>';
-                        }
-                        tableHtml += '</tr></thead><tbody>';
-                        for (var n = 0; n < bodyRows.length; n++) {
-                            tableHtml += '<tr>';
-                            for (var o = 0; o < tableCols; o++) {
-                                tableHtml += '<td>' + (bodyRows[n][o] || '') + '</td>';
+                            if (listItems.length > 0) {
+                                result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
+                                result.push(listItems.join(''));
+                                result.push('</ul>');
                             }
-                            tableHtml += '</tr>';
+                            i = j;
+                            continue;
                         }
-                        tableHtml += '</tbody></table>';
-                        result.push(tableHtml);
-                    }
-                    
-                    // 处理末尾未结束的列表
-                    if (inList) {
-                        result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
-                        result.push(listItems.join(''));
-                        result.push('</ul>');
+                        
+                        // ★★★ 普通行 ★★★
+                        if (trimmed === '') {
+                            result.push('');
+                        } else {
+                            var processed = line
+                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                .replace(/==(.+?)==/g, '<span class="highlight">$1</span>')
+                                .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                            result.push(processed);
+                        }
+                        i++;
                     }
                     
                     return result.join('<br>');
                 },
 
-                // ★★★ 工具栏方法 ★★★
+                // ★★★ 辅助方法：解析表格 ★★★
+                _parseTable: function(lines) {
+                    var cellsMatrix = [];
+                    var hasSeparator = false;
+                    
+                    for (var i = 0; i < lines.length; i++) {
+                        var line = lines[i].trim();
+                        if (!line.startsWith('|') || !line.endsWith('|')) continue;
+                        var cells = line.slice(1, -1).split('|').map(function(c) { return c.trim(); });
+                        
+                        var isSeparator = cells.every(function(c) { return /^[-:]+$/.test(c); });
+                        if (isSeparator) {
+                            hasSeparator = true;
+                            continue;
+                        }
+                        cellsMatrix.push(cells);
+                    }
+                    
+                    if (cellsMatrix.length === 0) return '';
+                    
+                    var html = '<table>';
+                    if (hasSeparator && cellsMatrix.length > 0) {
+                        var header = cellsMatrix[0];
+                        html += '<thead><tr>';
+                        for (var j = 0; j < header.length; j++) {
+                            var h = header[j]
+                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                .replace(/==(.+?)==/g, '<span class="highlight">$1</span>');
+                            html += '<th>' + (h || '') + '</th>';
+                        }
+                        html += '</tr></thead><tbody>';
+                        for (var k = 1; k < cellsMatrix.length; k++) {
+                            var row = cellsMatrix[k];
+                            html += '<tr>';
+                            for (var l = 0; l < Math.max(row.length, header.length); l++) {
+                                var val = row[l] || '';
+                                val = val
+                                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                    .replace(/==(.+?)==/g, '<span class="highlight">$1</span>');
+                                html += '<td>' + val + '</td>';
+                            }
+                            html += '</tr>';
+                        }
+                        html += '</tbody>';
+                    } else {
+                        html += '<tbody>';
+                        for (var m = 0; m < cellsMatrix.length; m++) {
+                            var row = cellsMatrix[m];
+                            html += '<tr>';
+                            for (var n = 0; n < row.length; n++) {
+                                var val = row[n]
+                                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                    .replace(/==(.+?)==/g, '<span class="highlight">$1</span>');
+                                html += '<td>' + (val || '') + '</td>';
+                            }
+                            html += '</tr>';
+                        }
+                        html += '</tbody>';
+                    }
+                    html += '</table>';
+                    return html;
+                },
+
                 wrapText: function(prefix, suffix, textareaId) {
                     var active = document.getElementById(textareaId);
                     if (!active) {
@@ -1659,7 +1640,6 @@
                     active.dispatchEvent(event);
                 },
 
-                // ★★★ 插入无序列表 ★★★
                 insertBulletList: function(textareaId) {
                     var active = document.getElementById(textareaId);
                     if (!active) {
@@ -1671,21 +1651,17 @@
                     var end = active.selectionEnd;
                     var text = active.value;
                     
-                    // 获取当前行
                     var lineStart = text.lastIndexOf('\n', start - 1) + 1;
                     var lineEnd = text.indexOf('\n', start);
                     if (lineEnd === -1) lineEnd = text.length;
                     var currentLine = text.substring(lineStart, lineEnd);
                     
-                    // 检查当前行是否已经是列表项
                     if (currentLine.trim().match(/^[-•]\s/)) {
-                        // 如果已经是列表项，移除列表标记
                         var newLine = currentLine.replace(/^[-•]\s/, '');
                         active.value = text.substring(0, lineStart) + newLine + text.substring(lineEnd);
                         var newPos = lineStart;
                         active.selectionStart = active.selectionEnd = newPos;
                     } else {
-                        // 否则插入列表标记
                         var insertText = '- ';
                         active.value = text.substring(0, lineStart) + insertText + text.substring(lineStart);
                         active.selectionStart = active.selectionEnd = lineStart + insertText.length;
@@ -1695,7 +1671,6 @@
                     active.dispatchEvent(event);
                 },
 
-                // ★★★ 表格相关 ★★★
                 openTableModal: function(textareaId) {
                     this._tableTargetId = textareaId;
                     this.tableCols = 3;
@@ -1712,7 +1687,6 @@
                     var rows = Math.max(1, this.tableRows || 1);
                     
                     var table = '';
-                    // 表头
                     table += '|';
                     for (var i = 0; i < cols; i++) {
                         table += ' 列' + (i + 1) + ' |';
@@ -1721,7 +1695,6 @@
                     for (var i = 0; i < cols; i++) {
                         table += ' --- |';
                     }
-                    // 数据行
                     for (var r = 0; r < rows; r++) {
                         table += '\n|';
                         for (var c = 0; c < cols; c++) {
@@ -1746,7 +1719,6 @@
                     this.closeTableModal();
                 },
 
-                // ===== 排序 =====
                 moveItemUp: function(index) {
                     if (index === 0) return;
                     var list = this.sortedRecords;
@@ -1787,7 +1759,6 @@
                     return (maxOrder + 1).toString();
                 },
 
-                // ===== Gist 相关 =====
                 getGistId: function() {
                     var el = document.getElementById('gistIdInput');
                     return el ? el.value.trim() : '';
@@ -1821,7 +1792,6 @@
                     return Math.min(parts.length - 1, 3);
                 },
 
-                // ===== 分类管理 =====
                 addCategory: function() {
                     if (!this.newCategoryName.trim()) { alert('请输入分类名称'); return; }
                     var id = this.newCategoryName.trim().toLowerCase().replace(/\s+/g, '-');
@@ -1879,7 +1849,6 @@
                     this.saveToGist();
                 },
 
-                // ===== 记录管理 =====
                 saveRecord: function() {
                     if (!this.canSaveQuick) return;
                     var order = this.getNextOrder(this.newRecordCategory || 'uncategorized');
@@ -1960,7 +1929,6 @@
                     this.saveToGist();
                 },
 
-                // ===== 分类详情页 =====
                 openCategory: function(id) {
                     this.currentCategoryId = id;
                     this.detailMode = true;
@@ -1976,7 +1944,6 @@
                     this.showNewRecordInDetail = false;
                 },
 
-                // ===== 阅读模式 =====
                 openReader: function() {
                     var published = this.records.filter(r => 
                         r.categoryId === this.currentCategoryId && 
@@ -2084,7 +2051,6 @@
                     this.readerPage = page;
                 },
 
-                // ===== Gist API =====
                 saveToGist: function() {
                     var gistId = this.getGistId();
                     var token = this.getGithubToken();
