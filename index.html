@@ -731,6 +731,7 @@
             background: rgba(0,0,0,0.02);
         }
 
+        /* ★★★ 目录页（toc-page）文字颜色 - 用 JS 兜底，这里作为备用 ★★★ */
         .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item .order {
             color: rgba(0,0,0,0.25) !important;
         }
@@ -995,6 +996,7 @@
         .reader-content .page-content .page-body li { margin: 2px 0; }
 
         /* --- 标注高亮样式 --- */
+        /* ★★★ 默认隐藏高亮，只有在标注模式开启时才显示 ★★★ */
         .reader-content .page-content .page-body .annotation-highlight {
             background: transparent;
             color: inherit;
@@ -1004,6 +1006,7 @@
             transition: none;
             position: relative;
         }
+        /* 标注模式开启时显示高亮 */
         .reader-overlay.annotation-mode .reader-content .page-content .page-body .annotation-highlight {
             background: #fbbf24;
             color: #1a1a2e;
@@ -1139,6 +1142,7 @@
             user-select: none;
         }
 
+        /* 阅读模式底部工具栏 - 标注控制 */
         .reader-annotation-bar {
             display: flex;
             align-items: center;
@@ -1599,6 +1603,7 @@
                         <button class="nav-btn" @click="readerNext" :disabled="readerPage >= totalReaderPages - 1 || isClosing">下一页 ▶</button>
                     </div>
 
+                    <!-- ★★★ 标注工具栏（含全局删除按钮）★★★ -->
                     <div class="reader-annotation-bar">
                         <button class="anno-btn" :class="{ active: annotationMode }" @click="toggleAnnotationMode">
                             {{ annotationMode ? '🟡 标注中' : '✏️ 标注' }}
@@ -1677,6 +1682,7 @@
                 tableCols: 3,
                 tableRows: 3,
                 _tableTargetId: null,
+                // ★★★ 用 Vue data 存储当前气泡要删除的标注信息 ★★★
                 _bubbleRecordId: null,
                 _bubbleIndex: null
             },
@@ -1797,6 +1803,7 @@
                     this.showNewRecordInDetail = true;
                 },
 
+                // ----- 标注功能 -----
                 loadAnnotations: function() {
                     try {
                         var data = localStorage.getItem(ANNOTATIONS_KEY);
@@ -1819,6 +1826,7 @@
                     this.refreshReaderPage();
                 },
 
+                // ★★★ 气泡控制 - 用 Vue data 存储，不依赖 DOM dataset ★★★
                 showBubble: function(recordId, index, x, y) {
                     console.log('showBubble called:', recordId, index);
                     this._bubbleRecordId = recordId;
@@ -1848,6 +1856,7 @@
                     }
                 },
 
+                // ★★★ 删除标注 - 直接从 Vue data 读取 recordId 和 index ★★★
                 deleteAnnotation: function() {
                     var recordId = this._bubbleRecordId;
                     var index = this._bubbleIndex;
@@ -1898,9 +1907,11 @@
                             this.bindAnnotationClicks();
                         }
                     }
+                    // ★★★ 切换纸张模式时修正目录颜色 ★★★
                     this.fixTocColors();
                 },
 
+                // ★★★ 用 JS 直接修正目录颜色 ★★★
                 fixTocColors: function() {
                     var self = this;
                     setTimeout(function() {
@@ -2032,54 +2043,36 @@
                         return this.renderContent(text);
                     }
                     
-                    // ★★★ 核心修复：先插入标签，再转义 ★★★
-                    var rawText = text;
                     var sorted = annotations.slice().sort(function(a, b) {
                         return b.start - a.start;
                     });
                     
-                    // 从后往前插入标注标记
+                    var html = text
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                    
                     for (var i = 0; i < sorted.length; i++) {
                         var anno = sorted[i];
                         var start = anno.start;
                         var len = anno.length;
-                        if (start + len > rawText.length) continue;
+                        if (start + len > html.length) continue;
                         
-                        var before = rawText.substring(0, start);
-                        var highlighted = rawText.substring(start, start + len);
-                        var after = rawText.substring(start + len);
+                        var before = html.substring(0, start);
+                        var highlighted = html.substring(start, start + len);
+                        var after = html.substring(start + len);
                         
-                        // 检查是否已经被标注包裹
                         if (before.endsWith('<span class="annotation-highlight"')) {
                             continue;
                         }
                         
-                        rawText = before + 
+                        html = before + 
                             '<span class="annotation-highlight" data-record="' + recordId + '" data-index="' + i + '">' + 
                             highlighted + 
                             '</span>' + 
                             after;
                     }
                     
-                    // ★★★ 用占位符保护标签，然后转义普通文本 ★★★
-                    var placeholders = [];
-                    var html = rawText.replace(/<span[^>]*>.*?<\/span>/gs, function(match) {
-                        placeholders.push(match);
-                        return '%%PLACEHOLDER_' + (placeholders.length - 1) + '%%';
-                    });
-                    
-                    // 转义普通文本
-                    html = html
-                        .replace(/&/g, '&amp;')
-                        .replace(/</g, '&lt;')
-                        .replace(/>/g, '&gt;');
-                    
-                    // 恢复占位符
-                    for (var p = 0; p < placeholders.length; p++) {
-                        html = html.replace('%%PLACEHOLDER_' + p + '%%', placeholders[p]);
-                    }
-                    
-                    // ★★★ 继续 Markdown 风格渲染 ★★★
                     var lines = html.split('\n');
                     var result = [];
                     var idx = 0;
@@ -2088,7 +2081,6 @@
                         var line = lines[idx];
                         var trimmed = line.trim();
                         
-                        // 表格检测
                         if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
                             var tableLines = [];
                             var j = idx;
@@ -2109,7 +2101,6 @@
                             continue;
                         }
                         
-                        // 列表检测
                         if (trimmed.match(/^[-•]\s/)) {
                             var listItems = [];
                             var j = idx;
@@ -2627,6 +2618,7 @@
                     this.showNewRecordInDetail = false;
                 },
 
+                // ---- Reader Mode ----
                 openReader: function() {
                     var published = this.records.filter(r => 
                         r.categoryId === this.currentCategoryId && 
@@ -2789,6 +2781,7 @@
                     setTimeout(function() { self.refreshReaderPage(); }, 50);
                 },
 
+                // ---- Gist 同步 ----
                 saveToGist: function() {
                     var gistId = this.getGistId();
                     var token = this.getGithubToken();
@@ -2977,6 +2970,7 @@
                     }
                 }, 500);
 
+                // ★★★ 气泡删除按钮 - 直接调用 Vue 的 deleteAnnotation ★★★
                 var deleteBtn = document.getElementById('bubbleDeleteBtn');
                 if (deleteBtn) {
                     deleteBtn.addEventListener('click', function(e) {
@@ -2997,7 +2991,7 @@
     })();
 </script>
 
-<!-- 气泡 DOM -->
+<!-- 气泡 DOM（独立于 Vue） -->
 <div id="annotationBubble" class="annotation-bubble" style="display:none;">
     <button class="bubble-del" id="bubbleDeleteBtn">✕ 删除</button>
 </div>
