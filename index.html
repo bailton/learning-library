@@ -618,6 +618,7 @@
         }
         .order-edit-input:focus { outline: none; border-color: #3b82f6; }
 
+        /* ===== READER STYLES ===== */
         .reader-overlay {
             position: fixed;
             top: 0;
@@ -631,7 +632,7 @@
             padding: 16px 20px;
             opacity: 0;
             transition: opacity 0.15s ease;
-            will-change: opacity;
+            will-change: transform, opacity;
         }
         .reader-overlay.open {
             display: flex !important;
@@ -642,33 +643,160 @@
             pointer-events: none;
             opacity: 0;
         }
-        .reader-content .page-content .page-body .highlight {
+
+        /* --- Paper Mode (Kindle-like) --- */
+        .reader-overlay.paper-mode {
+            background: #f5f0e8;
+        }
+        .reader-overlay.paper-mode .reader-header .title-area {
+            color: #5a4e3c;
+        }
+        .reader-overlay.paper-mode .reader-header .close-btn {
+            background: rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.1);
+            color: #5a4e3c;
+        }
+        .reader-overlay.paper-mode .reader-header .close-btn:hover {
+            background: rgba(0,0,0,0.12);
+        }
+        .reader-overlay.paper-mode .reader-toc {
+            background: rgba(0,0,0,0.04);
+            border-right: 1px solid rgba(0,0,0,0.08);
+        }
+        .reader-overlay.paper-mode .reader-toc .toc-header {
+            color: #5a4e3c;
+        }
+        .reader-overlay.paper-mode .reader-toc .toc-header .toggle-btn {
+            color: rgba(0,0,0,0.3);
+        }
+        .reader-overlay.paper-mode .reader-toc .toc-header .toggle-btn:hover {
+            color: rgba(0,0,0,0.6);
+        }
+        .reader-overlay.paper-mode .reader-toc .toc-list .toc-item {
+            color: #5a4e3c;
+        }
+        .reader-overlay.paper-mode .reader-toc .toc-list .toc-item:hover {
+            background: rgba(0,0,0,0.06);
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-toc .toc-list .toc-item.active {
+            background: rgba(139,92,246,0.15);
+            border-left-color: #8b5cf6;
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-toc .toc-list .toc-item .toc-order {
+            color: rgba(0,0,0,0.25);
+        }
+        .reader-overlay.paper-mode .reader-content .page-content {
+            color: #3d3428;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-title {
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-meta {
+            color: rgba(0,0,0,0.3);
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body strong {
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body em {
+            color: #5a4e3c;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body a {
+            color: #8b5cf6;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body .highlight {
+            background: #fef08a;
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body table {
+            color: #3d3428;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body table th,
+        .reader-overlay.paper-mode .reader-content .page-content .page-body table td {
+            border-color: rgba(0,0,0,0.15);
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body table th {
+            background: rgba(0,0,0,0.05);
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body table tr:nth-child(even) {
+            background: rgba(0,0,0,0.02);
+        }
+        .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item {
+            border-bottom-color: rgba(0,0,0,0.06);
+        }
+        .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item:hover {
+            background: rgba(0,0,0,0.04);
+        }
+        .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item .order {
+            color: rgba(0,0,0,0.25);
+        }
+        .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item .title {
+            color: #3d3428;
+        }
+        .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item:hover .title {
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-content.toc-page .toc-count {
+            color: rgba(0,0,0,0.25);
+        }
+        .reader-overlay.paper-mode .reader-nav {
+            border-top-color: rgba(0,0,0,0.08);
+        }
+        .reader-overlay.paper-mode .reader-nav .nav-btn {
+            background: rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.08);
+            color: #5a4e3c;
+        }
+        .reader-overlay.paper-mode .reader-nav .nav-btn:hover:not(:disabled) {
+            background: rgba(0,0,0,0.1);
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-nav .nav-btn:disabled {
+            opacity: 0.3;
+        }
+        .reader-overlay.paper-mode .reader-nav .nav-progress {
+            color: rgba(0,0,0,0.3);
+        }
+        .reader-overlay.paper-mode .reader-toc-toggle {
+            background: rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.08);
+            color: #5a4e3c;
+        }
+        .reader-overlay.paper-mode .reader-toc-toggle:hover {
+            background: rgba(0,0,0,0.1);
+            color: #2c241a;
+        }
+
+        /* --- Night Mode (default) --- */
+        .reader-overlay:not(.paper-mode) .reader-content .page-content .page-body .highlight {
             background: #fef08a;
             padding: 1px 4px;
             border-radius: 3px;
             color: #1a1a2e;
         }
-        .reader-content .page-content .page-body table {
+        .reader-overlay:not(.paper-mode) .reader-content .page-content .page-body table {
             border-collapse: collapse;
             width: 100%;
             margin: 8px 0;
             font-size: 0.9rem;
             color: rgba(255,255,255,0.92);
         }
-        .reader-content .page-content .page-body table th,
-        .reader-content .page-content .page-body table td {
+        .reader-overlay:not(.paper-mode) .reader-content .page-content .page-body table th,
+        .reader-overlay:not(.paper-mode) .reader-content .page-content .page-body table td {
             border: 1.5px solid rgba(255,255,255,0.2);
             padding: 6px 12px;
             text-align: left;
         }
-        .reader-content .page-content .page-body table th {
+        .reader-overlay:not(.paper-mode) .reader-content .page-content .page-body table th {
             background: rgba(255,255,255,0.08);
             font-weight: 600;
         }
-        .reader-content .page-content .page-body table tr:nth-child(even) {
+        .reader-overlay:not(.paper-mode) .reader-content .page-content .page-body table tr:nth-child(even) {
             background: rgba(255,255,255,0.03);
         }
 
+        /* --- Shared Reader Elements --- */
         .reader-header {
             display: flex;
             justify-content: space-between;
@@ -677,10 +805,39 @@
             border-bottom: 1px solid rgba(255,255,255,0.08);
             flex-shrink: 0;
         }
+        .reader-overlay.paper-mode .reader-header {
+            border-bottom-color: rgba(0,0,0,0.08);
+        }
         .reader-header .title-area {
             color: rgba(255,255,255,0.7);
             font-size: 0.9rem;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .reader-header .title-area .mode-toggle-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.6);
+            padding: 4px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.2s;
+        }
+        .reader-overlay.paper-mode .reader-header .title-area .mode-toggle-btn {
+            background: rgba(0,0,0,0.06);
+            border-color: rgba(0,0,0,0.1);
+            color: #5a4e3c;
+        }
+        .reader-header .title-area .mode-toggle-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .reader-overlay.paper-mode .reader-header .title-area .mode-toggle-btn:hover {
+            background: rgba(0,0,0,0.1);
+            color: #2c241a;
         }
         .reader-header .close-btn {
             background: rgba(255,255,255,0.1);
@@ -927,6 +1084,7 @@
             .toolbar-btn { padding: 2px 8px; font-size: 0.7rem; height: 26px; }
             .toolbar-group { padding: 2px 6px; }
             .toolbar-group .divider { margin: 0 2px; }
+            .reader-header .title-area .mode-toggle-btn { font-size: 0.65rem; padding: 2px 10px; }
         }
 
         .footer { text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 20px 0 10px; border-top: 1px solid #eef2f6; margin-top: 10px; }
@@ -1243,9 +1401,15 @@
         </div>
     </div>
 
-    <div class="reader-overlay" :class="{ open: readerOpen && !isClosing, closing: isClosing }" v-show="readerOpen || isClosing">
+    <!-- READER OVERLAY -->
+    <div class="reader-overlay" :class="{ open: readerOpen && !isClosing, closing: isClosing, 'paper-mode': readerPaperMode }" v-show="readerOpen || isClosing">
         <div class="reader-header">
-            <span class="title-area">📖 {{ currentCategory.name || '阅读' }}</span>
+            <span class="title-area">
+                📖 {{ currentCategory.name || '阅读' }}
+                <button class="mode-toggle-btn" @click="toggleReaderMode">
+                    {{ readerPaperMode ? '🌙 夜间模式' : '☀️ 纸张模式' }}
+                </button>
+            </span>
             <button class="close-btn" @click="closeReader">✕ 关闭</button>
         </div>
         <div class="reader-body">
@@ -1271,7 +1435,7 @@
                 <div class="page-wrapper">
                     <div class="page-content" :class="{ 'toc-page': readerPage === 0 }">
                         <template v-if="readerPage === 0">
-                            <h2 style="color:white;margin-bottom:12px;">📑 目录</h2>
+                            <h2 style="color:inherit;margin-bottom:12px;">📑 目录</h2>
                             <div class="toc-grid">
                                 <div class="toc-item" v-for="(item, idx) in readerRecords" :key="item.id" @click="goToPage(idx + 1)">
                                     <span class="order">{{ item.order || '' }}</span>
@@ -1349,6 +1513,7 @@
                 readerPage: 0,
                 tocOpen: true,
                 readerRecords: [],
+                readerPaperMode: false,
                 _readerKeyHandler: null,
                 _closeTimer: null,
                 showTableModal: false,
@@ -1464,7 +1629,6 @@
                     this.showNewRecordInDetail = true;
                 },
 
-                // ★★★ 修复后的 renderContent - 按顺序处理 ★★★
                 renderContent: function(text) {
                     if (!text) return '';
                     
@@ -1481,7 +1645,6 @@
                         var line = lines[i];
                         var trimmed = line.trim();
                         
-                        // ★★★ 优先检测表格（连续多行以 | 开头和结尾） ★★★
                         if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
                             var tableLines = [];
                             var j = i;
@@ -1502,7 +1665,6 @@
                             continue;
                         }
                         
-                        // ★★★ 检测列表（连续多行以 - 或 • 开头） ★★★
                         if (trimmed.match(/^[-•]\s/)) {
                             var listItems = [];
                             var j = i;
@@ -1529,7 +1691,6 @@
                             continue;
                         }
                         
-                        // ★★★ 普通行 ★★★
                         if (trimmed === '') {
                             result.push('');
                         } else {
@@ -1546,7 +1707,6 @@
                     return result.join('<br>');
                 },
 
-                // ★★★ 辅助方法：解析表格 ★★★
                 _parseTable: function(lines) {
                     var cellsMatrix = [];
                     var hasSeparator = false;
@@ -1944,6 +2104,7 @@
                     this.showNewRecordInDetail = false;
                 },
 
+                // ---- Reader Mode ----
                 openReader: function() {
                     var published = this.records.filter(r => 
                         r.categoryId === this.currentCategoryId && 
@@ -1982,12 +2143,17 @@
                     this.readerRecords = published;
                     this.readerPage = 0;
                     this.tocOpen = true;
+                    this.readerPaperMode = false; // 默认夜间模式
                     
                     this._readerKeyHandler = this._handleKeydown.bind(this);
                     document.addEventListener('keydown', this._readerKeyHandler);
                     
                     this.readerOpen = true;
                     document.body.style.overflow = 'hidden';
+                },
+
+                toggleReaderMode: function() {
+                    this.readerPaperMode = !this.readerPaperMode;
                 },
 
                 _handleKeydown: function(e) {
