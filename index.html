@@ -1847,12 +1847,12 @@
                     }
                 },
 
-                // ★★★ 修复：删除标注 - 先保存局部变量，再执行删除 ★★★
+                // ★★★ 修复1：删除标注 - 先保存到局部变量，再执行操作 ★★★
                 deleteAnnotation: function() {
                     var recordId = this._bubbleRecordId;
                     var index = this._bubbleIndex;
                     
-                    // 先隐藏气泡，避免重复点击
+                    // 先隐藏气泡
                     this.hideBubble();
                     
                     if (!recordId || index === null || index === undefined) {
@@ -1991,7 +1991,7 @@
                     sel.removeAllRanges();
                 },
 
-                // ★★★ 修复：renderContentWithAnnotations - 防止重复标注乱码 ★★★
+                // ★★★ 修复2：renderContentWithAnnotations - 防止重复标注乱码 ★★★
                 renderContentWithAnnotations: function(text, recordId) {
                     if (!text) return '';
                     
