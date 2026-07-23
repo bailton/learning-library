@@ -673,19 +673,19 @@
             color: rgba(0,0,0,0.6);
         }
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item {
-            color: #3d3428;
+            color: #3d3428 !important;
         }
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item:hover {
             background: rgba(0,0,0,0.06);
-            color: #2c241a;
+            color: #2c241a !important;
         }
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item.active {
             background: rgba(139,92,246,0.15);
             border-left-color: #8b5cf6;
-            color: #2c241a;
+            color: #2c241a !important;
         }
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item .toc-order {
-            color: rgba(0,0,0,0.25);
+            color: rgba(0,0,0,0.25) !important;
         }
         .reader-overlay.paper-mode .reader-content .page-content {
             color: #3d3428;
@@ -709,7 +709,6 @@
             background: #fef08a;
             color: #2c241a;
         }
-        /* 纸张模式 - 表格边框使用文字颜色 */
         .reader-overlay.paper-mode .reader-content .page-content .page-body table {
             color: #3d3428;
             border-collapse: collapse;
@@ -732,27 +731,22 @@
         }
 
         /* 纸张模式 - 目录页文字颜色（修复） */
-        .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item {
-            border-bottom-color: rgba(0,0,0,0.06);
-        }
-        .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item:hover {
-            background: rgba(0,0,0,0.04);
-        }
         .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item .order {
-            color: rgba(0,0,0,0.25);
+            color: rgba(0,0,0,0.25) !important;
         }
         .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item .title {
-            color: #3d3428 !important;  /* 强制使用深色 */
+            color: #3d3428 !important;
         }
         .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item:hover .title {
             color: #2c241a !important;
         }
         .reader-overlay.paper-mode .reader-content.toc-page .toc-count {
-            color: rgba(0,0,0,0.25);
+            color: rgba(0,0,0,0.25) !important;
         }
         .reader-overlay.paper-mode .reader-content.toc-page h2 {
             color: #2c241a !important;
         }
+
         .reader-overlay.paper-mode .reader-nav {
             border-top-color: rgba(0,0,0,0.08);
         }
@@ -1022,37 +1016,37 @@
             background: #f59e0b;
         }
 
-        /* 标注气泡 - 点击后显示 */
+        /* 标注气泡 */
         .annotation-bubble {
             position: fixed;
             background: #1a1a2e;
             color: white;
-            padding: 6px 14px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            display: flex;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+            display: none;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             z-index: 10002;
             pointer-events: auto;
             white-space: nowrap;
             font-family: -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
-            transition: opacity 0.15s ease;
             border: 1px solid rgba(255,255,255,0.1);
+            transform: translateX(-50%);
         }
         .annotation-bubble .bubble-label {
             opacity: 0.7;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
         }
         .annotation-bubble .bubble-del {
             background: rgba(239,68,68,0.2);
             border: none;
             color: #ef4444;
             cursor: pointer;
-            padding: 2px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
+            padding: 4px 16px;
+            border-radius: 8px;
+            font-size: 0.8rem;
             font-weight: 600;
             transition: 0.15s;
         }
@@ -1064,8 +1058,8 @@
             border: none;
             color: rgba(255,255,255,0.3);
             cursor: pointer;
-            font-size: 0.9rem;
-            padding: 0 2px;
+            font-size: 1rem;
+            padding: 0 4px;
         }
         .annotation-bubble .bubble-close:hover {
             color: rgba(255,255,255,0.7);
@@ -1074,7 +1068,7 @@
             background: #3d3428;
             color: #f5f0e8;
             border-color: rgba(0,0,0,0.1);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.2);
         }
         .reader-overlay.paper-mode .annotation-bubble .bubble-del {
             background: rgba(239,68,68,0.15);
@@ -1236,8 +1230,8 @@
             .toolbar-group .divider { margin: 0 2px; }
             .reader-header .title-area .mode-toggle-btn { font-size: 0.65rem; padding: 2px 10px; }
             .reader-annotation-bar .anno-btn { font-size: 0.65rem; padding: 2px 10px; }
-            .annotation-bubble { font-size: 0.7rem; padding: 4px 10px; }
-            .annotation-bubble .bubble-del { padding: 1px 8px; font-size: 0.65rem; }
+            .annotation-bubble { font-size: 0.75rem; padding: 6px 12px; }
+            .annotation-bubble .bubble-del { padding: 2px 10px; font-size: 0.7rem; }
         }
 
         .footer { text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 20px 0 10px; border-top: 1px solid #eef2f6; margin-top: 10px; }
@@ -1693,11 +1687,8 @@
                 tableRows: 3,
                 _tableTargetId: null,
                 // 气泡相关
-                bubbleVisible: false,
                 bubbleRecordId: null,
                 bubbleIndex: null,
-                bubbleX: 0,
-                bubbleY: 0,
                 _bubbleClickHandler: null,
                 _globalClickHandler: null
             },
@@ -1840,22 +1831,39 @@
                     if (this.annotationMode) {
                         document.getSelection().removeAllRanges();
                     }
-                    // 关闭气泡
                     this.hideBubble();
                 },
 
-                // 显示气泡（点击标注高亮时调用）
+                // 气泡控制（使用独立的 DOM 气泡）
                 showBubble: function(recordId, index, x, y) {
                     this.bubbleRecordId = recordId;
                     this.bubbleIndex = index;
-                    this.bubbleX = x;
-                    this.bubbleY = y - 10; // 向上偏移一点
-                    this.bubbleVisible = true;
+                    var bubble = document.getElementById('annotationBubble');
+                    if (!bubble) return;
+                    
+                    bubble.style.display = 'flex';
+                    bubble.style.left = x + 'px';
+                    bubble.style.top = (y - 10) + 'px';
+                    
+                    // 防止超出屏幕
+                    var rect = bubble.getBoundingClientRect();
+                    if (rect.right > window.innerWidth - 10) {
+                        bubble.style.left = (window.innerWidth - rect.width - 10) + 'px';
+                    }
+                    if (rect.bottom > window.innerHeight - 10) {
+                        bubble.style.top = (y - rect.height - 20) + 'px';
+                    }
+                    
+                    bubble.dataset.recordId = recordId;
+                    bubble.dataset.index = index;
                 },
                 hideBubble: function() {
-                    this.bubbleVisible = false;
                     this.bubbleRecordId = null;
                     this.bubbleIndex = null;
+                    var bubble = document.getElementById('annotationBubble');
+                    if (bubble) {
+                        bubble.style.display = 'none';
+                    }
                 },
 
                 // 删除单条标注
@@ -1899,7 +1907,7 @@
                     var pageBody = document.querySelector('.reader-content .page-content .page-body');
                     if (!pageBody) return;
                     
-                    // 移除旧的事件监听（用新监听替换）
+                    // 移除旧事件，绑定新事件
                     pageBody.querySelectorAll('.annotation-highlight').forEach(function(el) {
                         el.removeEventListener('click', self._annotationClickHandler);
                         el.addEventListener('click', self._annotationClickHandler);
@@ -1924,10 +1932,12 @@
 
                 // 全局点击关闭气泡
                 _globalClickHandler: function(e) {
-                    // 如果点击的不是气泡内部，关闭气泡
-                    var bubble = document.querySelector('.annotation-bubble');
-                    if (bubble && !bubble.contains(e.target)) {
-                        this.hideBubble();
+                    var bubble = document.getElementById('annotationBubble');
+                    if (bubble && bubble.style.display !== 'none') {
+                        // 如果点击的不是气泡内部，关闭气泡
+                        if (!bubble.contains(e.target)) {
+                            this.hideBubble();
+                        }
                     }
                 },
 
@@ -1979,7 +1989,7 @@
                         }
                     }
                     
-                    // 静默添加标注（无弹窗）
+                    // 静默添加标注
                     if (!this.annotations[recordId]) {
                         this.annotations[recordId] = [];
                     }
@@ -2003,7 +2013,7 @@
                         return this.renderContent(text);
                     }
                     
-                    // 按起始位置排序（从后往前插入，避免偏移）
+                    // 按起始位置排序（从后往前插入）
                     var sorted = annotations.slice().sort(function(a, b) {
                         return b.start - a.start;
                     });
@@ -2029,7 +2039,6 @@
                             continue;
                         }
                         
-                        // 注意：data-record 和 data-index 用来标识
                         html = before + 
                             '<span class="annotation-highlight" data-record="' + recordId + '" data-index="' + i + '">' + 
                             highlighted + 
@@ -2624,7 +2633,8 @@
                     this.tocOpen = true;
                     this.readerPaperMode = false;
                     this.annotationMode = false;
-                    this.bubbleVisible = false;
+                    this.bubbleRecordId = null;
+                    this.bubbleIndex = null;
                     
                     this.loadAnnotations();
                     
@@ -2644,7 +2654,6 @@
                     var self = this;
                     setTimeout(function() {
                         self.refreshReaderPage();
-                        // 绑定选中事件
                         document.removeEventListener('mouseup', self._selectionHandler);
                         self._selectionHandler = self.handleTextSelection.bind(self);
                         document.addEventListener('mouseup', self._selectionHandler);
@@ -2676,7 +2685,8 @@
                         }
                     } else if (e.key === 'Escape') {
                         e.preventDefault();
-                        if (this.bubbleVisible) {
+                        var bubble = document.getElementById('annotationBubble');
+                        if (bubble && bubble.style.display !== 'none') {
                             this.hideBubble();
                         } else {
                             this.closeReader();
@@ -2932,109 +2942,46 @@
                         self.updateDebug('💡 请填写 Gist ID 和 GitHub Token，然后点击"连接并同步"', '');
                     }
                 }, 500);
+
+                // 绑定气泡的删除和关闭按钮
+                var bubble = document.getElementById('annotationBubble');
+                var deleteBtn = document.getElementById('bubbleDeleteBtn');
+                var closeBtn = document.getElementById('bubbleCloseBtn');
+
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        var recordId = bubble.dataset.recordId;
+                        var index = parseInt(bubble.dataset.index);
+                        if (recordId && !isNaN(index)) {
+                            self.deleteAnnotation(recordId, index);
+                        }
+                    });
+                }
+
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        self.hideBubble();
+                    });
+                }
+
+                if (bubble) {
+                    bubble.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                    });
+                }
             }
         });
     })();
 </script>
 
-<!-- 气泡模板（独立于 Vue 渲染，直接用 DOM） -->
-<div id="annotationBubble" class="annotation-bubble" style="display:none;pointer-events:auto;">
+<!-- 气泡 DOM（独立于 Vue） -->
+<div id="annotationBubble" class="annotation-bubble" style="display:none;">
     <span class="bubble-label">📌 标注</span>
     <button class="bubble-del" id="bubbleDeleteBtn">✕ 删除</button>
     <button class="bubble-close" id="bubbleCloseBtn">✕</button>
 </div>
 
-<script>
-    // 气泡的独立控制（因为 Vue 的 v-if 在 fixed 定位时会有渲染延迟）
-    (function() {
-        var bubble = document.getElementById('annotationBubble');
-        var deleteBtn = document.getElementById('bubbleDeleteBtn');
-        var closeBtn = document.getElementById('bubbleCloseBtn');
-        
-        // 这些方法会被 Vue 实例调用
-        window.__bubble = {
-            show: function(x, y, recordId, index) {
-                bubble.style.display = 'flex';
-                bubble.style.left = x + 'px';
-                bubble.style.top = y + 'px';
-                // 确保不超出屏幕
-                var rect = bubble.getBoundingClientRect();
-                if (rect.right > window.innerWidth - 10) {
-                    bubble.style.left = (window.innerWidth - rect.width - 10) + 'px';
-                }
-                if (rect.bottom > window.innerHeight - 10) {
-                    bubble.style.top = (y - rect.height - 20) + 'px';
-                }
-                bubble.dataset.recordId = recordId;
-                bubble.dataset.index = index;
-            },
-            hide: function() {
-                bubble.style.display = 'none';
-            },
-            getData: function() {
-                return {
-                    recordId: bubble.dataset.recordId,
-                    index: parseInt(bubble.dataset.index)
-                };
-            }
-        };
-        
-        // 删除按钮
-        deleteBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            var data = window.__bubble.getData();
-            if (data.recordId && !isNaN(data.index)) {
-                // 调用 Vue 实例的 deleteAnnotation 方法
-                var app = document.querySelector('#app').__vue__;
-                if (app) {
-                    app.deleteAnnotation(data.recordId, data.index);
-                }
-            }
-        });
-        
-        // 关闭按钮
-        closeBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            var app = document.querySelector('#app').__vue__;
-            if (app) {
-                app.hideBubble();
-            }
-        });
-        
-        // 点击气泡本身不关闭
-        bubble.addEventListener('click', function(e) {
-            e.stopPropagation();
-        });
-    })();
-</script>
-
-<script>
-    // 覆写 Vue 的 showBubble/hideBubble 方法，使用独立气泡
-    (function() {
-        var originalShow = Vue.prototype.$options.methods.showBubble;
-        var originalHide = Vue.prototype.$options.methods.hideBubble;
-        
-        // 在 mounted 后替换
-        var app = document.querySelector('#app').__vue__;
-        if (app) {
-            app.showBubble = function(recordId, index, x, y) {
-                this.bubbleRecordId = recordId;
-                this.bubbleIndex = index;
-                this.bubbleVisible = true;
-                if (window.__bubble) {
-                    window.__bubble.show(x, y, recordId, index);
-                }
-            };
-            app.hideBubble = function() {
-                this.bubbleVisible = false;
-                this.bubbleRecordId = null;
-                this.bubbleIndex = null;
-                if (window.__bubble) {
-                    window.__bubble.hide();
-                }
-            };
-        }
-    })();
-</script>
 </body>
 </html>
