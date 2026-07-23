@@ -672,6 +672,7 @@
         .reader-overlay.paper-mode .reader-toc .toc-header .toggle-btn:hover {
             color: rgba(0,0,0,0.6);
         }
+        /* ★★★ 修复：目录列表所有文字变深色 ★★★ */
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item {
             color: #3d3428 !important;
         }
@@ -687,6 +688,7 @@
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item .toc-order {
             color: rgba(0,0,0,0.25) !important;
         }
+
         .reader-overlay.paper-mode .reader-content .page-content {
             color: #3d3428;
         }
@@ -730,7 +732,7 @@
             background: rgba(0,0,0,0.02);
         }
 
-        /* 纸张模式 - 目录页文字颜色（修复） */
+        /* ★★★ 修复：目录页（toc-page）文字颜色 ★★★ */
         .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item .order {
             color: rgba(0,0,0,0.25) !important;
         }
@@ -995,24 +997,34 @@
         .reader-content .page-content .page-body li { margin: 2px 0; }
 
         /* --- 标注高亮样式 --- */
+        /* ★★★ 默认隐藏高亮，只有在标注模式开启时才显示 ★★★ */
         .reader-content .page-content .page-body .annotation-highlight {
+            background: transparent;
+            color: inherit;
+            padding: 0;
+            border-radius: 0;
+            cursor: default;
+            transition: none;
+            position: relative;
+        }
+        /* 标注模式开启时显示高亮 */
+        .reader-overlay.annotation-mode .reader-content .page-content .page-body .annotation-highlight {
             background: #fbbf24;
             color: #1a1a2e;
             padding: 1px 3px;
             border-radius: 3px;
             cursor: pointer;
             transition: 0.15s;
-            position: relative;
         }
-        .reader-content .page-content .page-body .annotation-highlight:hover {
+        .reader-overlay.annotation-mode .reader-content .page-content .page-body .annotation-highlight:hover {
             background: #f59e0b;
             box-shadow: 0 0 0 2px #f59e0b;
         }
-        .reader-overlay.paper-mode .reader-content .page-content .page-body .annotation-highlight {
+        .reader-overlay.paper-mode.annotation-mode .reader-content .page-content .page-body .annotation-highlight {
             background: #fbbf24;
             color: #2c241a;
         }
-        .reader-overlay.paper-mode .reader-content .page-content .page-body .annotation-highlight:hover {
+        .reader-overlay.paper-mode.annotation-mode .reader-content .page-content .page-body .annotation-highlight:hover {
             background: #f59e0b;
         }
 
@@ -1021,13 +1033,13 @@
             position: fixed;
             background: #1a1a2e;
             color: white;
-            padding: 8px 16px;
-            border-radius: 12px;
+            padding: 6px 14px;
+            border-radius: 10px;
             font-size: 0.85rem;
             box-shadow: 0 4px 24px rgba(0,0,0,0.5);
             display: none;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
             z-index: 10002;
             pointer-events: auto;
             white-space: nowrap;
@@ -1035,34 +1047,19 @@
             border: 1px solid rgba(255,255,255,0.1);
             transform: translateX(-50%);
         }
-        .annotation-bubble .bubble-label {
-            opacity: 0.7;
-            font-size: 0.8rem;
-        }
         .annotation-bubble .bubble-del {
             background: rgba(239,68,68,0.2);
             border: none;
             color: #ef4444;
             cursor: pointer;
-            padding: 4px 16px;
-            border-radius: 8px;
+            padding: 3px 14px;
+            border-radius: 6px;
             font-size: 0.8rem;
             font-weight: 600;
             transition: 0.15s;
         }
         .annotation-bubble .bubble-del:hover {
             background: rgba(239,68,68,0.4);
-        }
-        .annotation-bubble .bubble-close {
-            background: none;
-            border: none;
-            color: rgba(255,255,255,0.3);
-            cursor: pointer;
-            font-size: 1rem;
-            padding: 0 4px;
-        }
-        .annotation-bubble .bubble-close:hover {
-            color: rgba(255,255,255,0.7);
         }
         .reader-overlay.paper-mode .annotation-bubble {
             background: #3d3428;
@@ -1230,7 +1227,7 @@
             .toolbar-group .divider { margin: 0 2px; }
             .reader-header .title-area .mode-toggle-btn { font-size: 0.65rem; padding: 2px 10px; }
             .reader-annotation-bar .anno-btn { font-size: 0.65rem; padding: 2px 10px; }
-            .annotation-bubble { font-size: 0.75rem; padding: 6px 12px; }
+            .annotation-bubble { font-size: 0.75rem; padding: 4px 10px; }
             .annotation-bubble .bubble-del { padding: 2px 10px; font-size: 0.7rem; }
         }
 
@@ -1549,7 +1546,7 @@
     </div>
 
     <!-- READER OVERLAY -->
-    <div class="reader-overlay" :class="{ open: readerOpen && !isClosing, closing: isClosing, 'paper-mode': readerPaperMode }" v-show="readerOpen || isClosing">
+    <div class="reader-overlay" :class="{ open: readerOpen && !isClosing, closing: isClosing, 'paper-mode': readerPaperMode, 'annotation-mode': annotationMode }" v-show="readerOpen || isClosing">
         <div class="reader-header">
             <span class="title-area">
                 📖 {{ currentCategory.name || '阅读' }}
@@ -1685,12 +1682,7 @@
                 showTableModal: false,
                 tableCols: 3,
                 tableRows: 3,
-                _tableTargetId: null,
-                // 气泡相关
-                bubbleRecordId: null,
-                bubbleIndex: null,
-                _bubbleClickHandler: null,
-                _globalClickHandler: null
+                _tableTargetId: null
             },
             computed: {
                 allCategories: function() {
@@ -1823,21 +1815,18 @@
                 saveAnnotations: function() {
                     localStorage.setItem(ANNOTATIONS_KEY, JSON.stringify(this.annotations));
                 },
-                getAnnotationsForRecord: function(recordId) {
-                    return this.annotations[recordId] || [];
-                },
                 toggleAnnotationMode: function() {
                     this.annotationMode = !this.annotationMode;
                     if (this.annotationMode) {
                         document.getSelection().removeAllRanges();
                     }
                     this.hideBubble();
+                    // 重新渲染页面以显示/隐藏高亮
+                    this.refreshReaderPage();
                 },
 
                 // 气泡控制（使用独立的 DOM 气泡）
                 showBubble: function(recordId, index, x, y) {
-                    this.bubbleRecordId = recordId;
-                    this.bubbleIndex = index;
                     var bubble = document.getElementById('annotationBubble');
                     if (!bubble) return;
                     
@@ -1845,7 +1834,6 @@
                     bubble.style.left = x + 'px';
                     bubble.style.top = (y - 10) + 'px';
                     
-                    // 防止超出屏幕
                     var rect = bubble.getBoundingClientRect();
                     if (rect.right > window.innerWidth - 10) {
                         bubble.style.left = (window.innerWidth - rect.width - 10) + 'px';
@@ -1858,8 +1846,6 @@
                     bubble.dataset.index = index;
                 },
                 hideBubble: function() {
-                    this.bubbleRecordId = null;
-                    this.bubbleIndex = null;
                     var bubble = document.getElementById('annotationBubble');
                     if (bubble) {
                         bubble.style.display = 'none';
@@ -1896,25 +1882,24 @@
                             this.readerItem.content, 
                             this.readerItem.id
                         );
-                        // 重新绑定标注点击事件
-                        this.bindAnnotationClicks();
+                        // 只有标注模式开启时才绑定点击事件
+                        if (this.annotationMode) {
+                            this.bindAnnotationClicks();
+                        }
                     }
                 },
 
-                // 绑定标注点击事件（点击高亮显示气泡）
                 bindAnnotationClicks: function() {
                     var self = this;
                     var pageBody = document.querySelector('.reader-content .page-content .page-body');
                     if (!pageBody) return;
                     
-                    // 移除旧事件，绑定新事件
                     pageBody.querySelectorAll('.annotation-highlight').forEach(function(el) {
                         el.removeEventListener('click', self._annotationClickHandler);
                         el.addEventListener('click', self._annotationClickHandler);
                     });
                 },
 
-                // 标注点击处理
                 _annotationClickHandler: function(e) {
                     var self = this;
                     var el = e.currentTarget;
@@ -1930,18 +1915,15 @@
                     }
                 },
 
-                // 全局点击关闭气泡
                 _globalClickHandler: function(e) {
                     var bubble = document.getElementById('annotationBubble');
                     if (bubble && bubble.style.display !== 'none') {
-                        // 如果点击的不是气泡内部，关闭气泡
                         if (!bubble.contains(e.target)) {
                             this.hideBubble();
                         }
                     }
                 },
 
-                // 获取当前页面选中的文字，自动添加标注
                 handleTextSelection: function(e) {
                     if (!this.annotationMode || !this.readerOpen || this.isClosing) return;
                     if (this.readerPage === 0) return;
@@ -1959,7 +1941,6 @@
                     var text = sel.toString().trim();
                     if (!text || text.length < 1) return;
                     
-                    // 如果选中了标注高亮内部，不处理
                     if (container.closest && container.closest('.annotation-highlight')) {
                         sel.removeAllRanges();
                         return;
@@ -1980,7 +1961,6 @@
                         if (startIdx === -1) return;
                     }
                     
-                    // 检查是否已标注过
                     var existing = this.annotations[recordId] || [];
                     for (var j = 0; j < existing.length; j++) {
                         if (existing[j].text === text && existing[j].start === startIdx) {
@@ -1989,7 +1969,6 @@
                         }
                     }
                     
-                    // 静默添加标注
                     if (!this.annotations[recordId]) {
                         this.annotations[recordId] = [];
                     }
@@ -2004,7 +1983,6 @@
                     sel.removeAllRanges();
                 },
 
-                // ----- 渲染内容（含标注）-----
                 renderContentWithAnnotations: function(text, recordId) {
                     if (!text) return '';
                     
@@ -2013,7 +1991,6 @@
                         return this.renderContent(text);
                     }
                     
-                    // 按起始位置排序（从后往前插入）
                     var sorted = annotations.slice().sort(function(a, b) {
                         return b.start - a.start;
                     });
@@ -2023,7 +2000,6 @@
                         .replace(/</g, '&lt;')
                         .replace(/>/g, '&gt;');
                     
-                    // 从后往前插入标注标记
                     for (var i = 0; i < sorted.length; i++) {
                         var anno = sorted[i];
                         var start = anno.start;
@@ -2034,7 +2010,6 @@
                         var highlighted = html.substring(start, start + len);
                         var after = html.substring(start + len);
                         
-                        // 检查是否已经被标注包裹
                         if (before.endsWith('<span class="annotation-highlight"')) {
                             continue;
                         }
@@ -2046,7 +2021,6 @@
                             after;
                     }
                     
-                    // 然后进行 Markdown 风格渲染
                     var lines = html.split('\n');
                     var result = [];
                     var idx = 0;
@@ -2633,15 +2607,12 @@
                     this.tocOpen = true;
                     this.readerPaperMode = false;
                     this.annotationMode = false;
-                    this.bubbleRecordId = null;
-                    this.bubbleIndex = null;
                     
                     this.loadAnnotations();
                     
                     this._readerKeyHandler = this._handleKeydown.bind(this);
                     document.addEventListener('keydown', this._readerKeyHandler);
                     
-                    // 全局点击关闭气泡
                     if (this._globalClickHandler) {
                         document.removeEventListener('click', this._globalClickHandler);
                     }
@@ -2928,8 +2899,9 @@
                 }
             },
             mounted: function() {
-                this.loadFromLocal();
                 var self = this;
+                this.loadFromLocal();
+                
                 if (this.allCategories.length > 0) {
                     this.newRecordCategory = this.allCategories[0].id;
                 }
@@ -2943,10 +2915,9 @@
                     }
                 }, 500);
 
-                // 绑定气泡的删除和关闭按钮
+                // 绑定气泡的删除按钮
                 var bubble = document.getElementById('annotationBubble');
                 var deleteBtn = document.getElementById('bubbleDeleteBtn');
-                var closeBtn = document.getElementById('bubbleCloseBtn');
 
                 if (deleteBtn) {
                     deleteBtn.addEventListener('click', function(e) {
@@ -2956,13 +2927,6 @@
                         if (recordId && !isNaN(index)) {
                             self.deleteAnnotation(recordId, index);
                         }
-                    });
-                }
-
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        self.hideBubble();
                     });
                 }
 
@@ -2978,9 +2942,7 @@
 
 <!-- 气泡 DOM（独立于 Vue） -->
 <div id="annotationBubble" class="annotation-bubble" style="display:none;">
-    <span class="bubble-label">📌 标注</span>
     <button class="bubble-del" id="bubbleDeleteBtn">✕ 删除</button>
-    <button class="bubble-close" id="bubbleCloseBtn">✕</button>
 </div>
 
 </body>
