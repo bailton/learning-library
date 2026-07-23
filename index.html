@@ -649,12 +649,12 @@
             background: #f5f0e8;
         }
         .reader-overlay.paper-mode .reader-header .title-area {
-            color: #5a4e3c;
+            color: #3d3428;
         }
         .reader-overlay.paper-mode .reader-header .close-btn {
             background: rgba(0,0,0,0.06);
             border: 1px solid rgba(0,0,0,0.1);
-            color: #5a4e3c;
+            color: #3d3428;
         }
         .reader-overlay.paper-mode .reader-header .close-btn:hover {
             background: rgba(0,0,0,0.12);
@@ -664,7 +664,7 @@
             border-right: 1px solid rgba(0,0,0,0.08);
         }
         .reader-overlay.paper-mode .reader-toc .toc-header {
-            color: #5a4e3c;
+            color: #3d3428;
         }
         .reader-overlay.paper-mode .reader-toc .toc-header .toggle-btn {
             color: rgba(0,0,0,0.3);
@@ -673,7 +673,7 @@
             color: rgba(0,0,0,0.6);
         }
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item {
-            color: #5a4e3c;
+            color: #3d3428;
         }
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item:hover {
             background: rgba(0,0,0,0.06);
@@ -709,19 +709,29 @@
             background: #fef08a;
             color: #2c241a;
         }
+        /* 纸张模式 - 表格边框使用文字颜色 */
         .reader-overlay.paper-mode .reader-content .page-content .page-body table {
             color: #3d3428;
+            border-collapse: collapse;
+            width: 100%;
+            margin: 8px 0;
+            font-size: 0.9rem;
         }
         .reader-overlay.paper-mode .reader-content .page-content .page-body table th,
         .reader-overlay.paper-mode .reader-content .page-content .page-body table td {
-            border-color: rgba(0,0,0,0.15);
+            border: 1.5px solid #3d3428;
+            padding: 6px 12px;
+            text-align: left;
         }
         .reader-overlay.paper-mode .reader-content .page-content .page-body table th {
             background: rgba(0,0,0,0.05);
+            font-weight: 600;
         }
         .reader-overlay.paper-mode .reader-content .page-content .page-body table tr:nth-child(even) {
             background: rgba(0,0,0,0.02);
         }
+
+        /* 纸张模式 - 目录页文字颜色 */
         .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item {
             border-bottom-color: rgba(0,0,0,0.06);
         }
@@ -746,7 +756,7 @@
         .reader-overlay.paper-mode .reader-nav .nav-btn {
             background: rgba(0,0,0,0.05);
             border: 1px solid rgba(0,0,0,0.08);
-            color: #5a4e3c;
+            color: #3d3428;
         }
         .reader-overlay.paper-mode .reader-nav .nav-btn:hover:not(:disabled) {
             background: rgba(0,0,0,0.1);
@@ -761,9 +771,23 @@
         .reader-overlay.paper-mode .reader-toc-toggle {
             background: rgba(0,0,0,0.06);
             border: 1px solid rgba(0,0,0,0.08);
-            color: #5a4e3c;
+            color: #3d3428;
         }
         .reader-overlay.paper-mode .reader-toc-toggle:hover {
+            background: rgba(0,0,0,0.1);
+            color: #2c241a;
+        }
+        /* 纸张模式 - 目录中的 H2 标题 */
+        .reader-overlay.paper-mode .reader-content.toc-page h2 {
+            color: #2c241a;
+        }
+        /* 纸张模式 - 模式切换按钮 */
+        .reader-overlay.paper-mode .reader-header .title-area .mode-toggle-btn {
+            background: rgba(0,0,0,0.06);
+            border-color: rgba(0,0,0,0.1);
+            color: #3d3428;
+        }
+        .reader-overlay.paper-mode .reader-header .title-area .mode-toggle-btn:hover {
             background: rgba(0,0,0,0.1);
             color: #2c241a;
         }
@@ -795,6 +819,15 @@
         .reader-overlay:not(.paper-mode) .reader-content .page-content .page-body table tr:nth-child(even) {
             background: rgba(255,255,255,0.03);
         }
+        .reader-overlay:not(.paper-mode) .reader-header .title-area .mode-toggle-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: rgba(255,255,255,0.6);
+        }
+        .reader-overlay:not(.paper-mode) .reader-header .title-area .mode-toggle-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
 
         /* --- Shared Reader Elements --- */
         .reader-header {
@@ -817,27 +850,11 @@
             gap: 12px;
         }
         .reader-header .title-area .mode-toggle-btn {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: rgba(255,255,255,0.6);
             padding: 4px 14px;
             border-radius: 40px;
             cursor: pointer;
             font-size: 0.75rem;
             transition: 0.2s;
-        }
-        .reader-overlay.paper-mode .reader-header .title-area .mode-toggle-btn {
-            background: rgba(0,0,0,0.06);
-            border-color: rgba(0,0,0,0.1);
-            color: #5a4e3c;
-        }
-        .reader-header .title-area .mode-toggle-btn:hover {
-            background: rgba(255,255,255,0.2);
-            color: white;
-        }
-        .reader-overlay.paper-mode .reader-header .title-area .mode-toggle-btn:hover {
-            background: rgba(0,0,0,0.1);
-            color: #2c241a;
         }
         .reader-header .close-btn {
             background: rgba(255,255,255,0.1);
@@ -956,6 +973,7 @@
             padding: 8px 0;
             min-height: 0;
             -webkit-overflow-scrolling: touch;
+            position: relative;
         }
         .reader-content .page-content .page-title {
             font-size: 1.5rem;
@@ -983,6 +1001,67 @@
             list-style-type: disc;
         }
         .reader-content .page-content .page-body li { margin: 2px 0; }
+
+        /* --- 标注高亮样式 --- */
+        .reader-content .page-content .page-body .annotation-highlight {
+            background: #fbbf24;
+            color: #1a1a2e;
+            padding: 0 2px;
+            border-radius: 2px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .reader-content .page-content .page-body .annotation-highlight:hover {
+            background: #f59e0b;
+            box-shadow: 0 0 0 2px #f59e0b;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body .annotation-highlight {
+            background: #fbbf24;
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body .annotation-highlight:hover {
+            background: #f59e0b;
+        }
+
+        .reader-content .page-content .page-body .annotation-highlight .annotation-tooltip {
+            display: none;
+            position: absolute;
+            background: #1a1a2e;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 4px;
+            pointer-events: none;
+        }
+        .reader-overlay.paper-mode .reader-content .page-content .page-body .annotation-highlight .annotation-tooltip {
+            background: #3d3428;
+            color: #f5f0e8;
+        }
+        .reader-content .page-content .page-body .annotation-highlight {
+            position: relative;
+        }
+        .reader-content .page-content .page-body .annotation-highlight:hover .annotation-tooltip {
+            display: block;
+        }
+
+        .reader-content .page-content .page-body .annotation-highlight .annotation-tooltip .del-anno {
+            background: rgba(255,0,0,0.2);
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 0.7rem;
+            padding: 0 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+        .reader-content .page-content .page-body .annotation-highlight .annotation-tooltip .del-anno:hover {
+            background: rgba(255,0,0,0.4);
+        }
 
         .reader-content .page-content.toc-page .toc-grid .toc-item {
             padding: 8px 12px;
@@ -1052,6 +1131,56 @@
             user-select: none;
         }
 
+        /* 阅读模式底部工具栏 - 标注控制 */
+        .reader-annotation-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0 4px 0;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+        }
+        .reader-annotation-bar .anno-btn {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: rgba(255,255,255,0.6);
+            padding: 4px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.2s;
+        }
+        .reader-annotation-bar .anno-btn:hover {
+            background: rgba(255,255,255,0.12);
+            color: white;
+        }
+        .reader-annotation-bar .anno-btn.active {
+            background: rgba(251,191,36,0.2);
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+        .reader-overlay.paper-mode .reader-annotation-bar .anno-btn {
+            background: rgba(0,0,0,0.04);
+            border-color: rgba(0,0,0,0.08);
+            color: #3d3428;
+        }
+        .reader-overlay.paper-mode .reader-annotation-bar .anno-btn:hover {
+            background: rgba(0,0,0,0.08);
+            color: #2c241a;
+        }
+        .reader-overlay.paper-mode .reader-annotation-bar .anno-btn.active {
+            background: rgba(251,191,36,0.25);
+            border-color: #fbbf24;
+            color: #92400e;
+        }
+        .reader-annotation-bar .anno-status {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+        }
+        .reader-overlay.paper-mode .reader-annotation-bar .anno-status {
+            color: rgba(0,0,0,0.25);
+        }
+
         .reader-toc-toggle {
             position: fixed;
             top: 70px;
@@ -1085,6 +1214,7 @@
             .toolbar-group { padding: 2px 6px; }
             .toolbar-group .divider { margin: 0 2px; }
             .reader-header .title-area .mode-toggle-btn { font-size: 0.65rem; padding: 2px 10px; }
+            .reader-annotation-bar .anno-btn { font-size: 0.65rem; padding: 2px 10px; }
         }
 
         .footer { text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 20px 0 10px; border-top: 1px solid #eef2f6; margin-top: 10px; }
@@ -1450,7 +1580,7 @@
                                 {{ formatDate(readerItem.createdAt) }}
                                 <span v-if="readerItem.source"> · 📎 {{ readerItem.source }}</span>
                             </div>
-                            <div class="page-body" v-html="renderContent(readerItem.content)"></div>
+                            <div class="page-body" v-html="renderContentWithAnnotations(readerItem.content, readerItem.id)"></div>
                         </template>
                     </div>
 
@@ -1458,6 +1588,22 @@
                         <button class="nav-btn" @click="readerPrev" :disabled="readerPage <= 0 || isClosing">◀ 上一页</button>
                         <span class="nav-progress">{{ readerPage + 1 }} / {{ totalReaderPages }}</span>
                         <button class="nav-btn" @click="readerNext" :disabled="readerPage >= totalReaderPages - 1 || isClosing">下一页 ▶</button>
+                    </div>
+
+                    <!-- 标注工具栏 -->
+                    <div class="reader-annotation-bar">
+                        <button class="anno-btn" :class="{ active: annotationMode }" @click="toggleAnnotationMode">
+                            {{ annotationMode ? '🟡 标注中' : '✏️ 标注' }}
+                        </button>
+                        <span class="anno-status" v-if="annotationCount > 0">
+                            {{ annotationCount }} 处标注
+                        </span>
+                        <button class="anno-btn" @click="clearAllAnnotations" v-if="annotationCount > 0">
+                            🗑️ 清除所有标注
+                        </button>
+                        <span class="anno-status" style="font-size:0.65rem;opacity:0.6;">
+                            {{ annotationMode ? '选中文字后点击标注' : '' }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -1477,6 +1623,7 @@
 
         var STORAGE_KEY = 'learning_library_data';
         var CONFIG_KEY = 'learning_library_config';
+        var ANNOTATIONS_KEY = 'learning_library_annotations';
 
         new Vue({
             el: '#app',
@@ -1514,6 +1661,8 @@
                 tocOpen: true,
                 readerRecords: [],
                 readerPaperMode: false,
+                annotationMode: false,
+                annotations: {},
                 _readerKeyHandler: null,
                 _closeTimer: null,
                 showTableModal: false,
@@ -1604,6 +1753,15 @@
                 readerItem: function() {
                     var idx = this.readerPage - 1;
                     return this.readerRecords[idx] || null;
+                },
+                annotationCount: function() {
+                    var count = 0;
+                    for (var key in this.annotations) {
+                        if (this.annotations.hasOwnProperty(key)) {
+                            count += this.annotations[key].length || 0;
+                        }
+                    }
+                    return count;
                 }
             },
             methods: {
@@ -1629,6 +1787,245 @@
                     this.showNewRecordInDetail = true;
                 },
 
+                // ----- 标注功能 -----
+                loadAnnotations: function() {
+                    try {
+                        var data = localStorage.getItem(ANNOTATIONS_KEY);
+                        if (data) {
+                            this.annotations = JSON.parse(data);
+                        }
+                    } catch (e) {
+                        this.annotations = {};
+                    }
+                },
+                saveAnnotations: function() {
+                    localStorage.setItem(ANNOTATIONS_KEY, JSON.stringify(this.annotations));
+                },
+                getAnnotationsForRecord: function(recordId) {
+                    return this.annotations[recordId] || [];
+                },
+                toggleAnnotationMode: function() {
+                    this.annotationMode = !this.annotationMode;
+                    if (this.annotationMode) {
+                        // 退出标注模式时，取消所有选中
+                        document.getSelection().removeAllRanges();
+                    }
+                },
+                // 在阅读模式下处理文字选中
+                handleTextSelection: function(e) {
+                    if (!this.annotationMode || !this.readerOpen || this.isClosing) return;
+                    if (this.readerPage === 0) return;
+                    
+                    var sel = window.getSelection();
+                    if (!sel || sel.isCollapsed || !sel.rangeCount) return;
+                    
+                    var range = sel.getRangeAt(0);
+                    var container = range.commonAncestorContainer;
+                    
+                    // 检查是否在 page-body 内
+                    var pageBody = document.querySelector('.reader-content .page-content .page-body');
+                    if (!pageBody) return;
+                    if (!pageBody.contains(container)) return;
+                    
+                    var text = sel.toString().trim();
+                    if (!text || text.length < 1) return;
+                    
+                    // 防止标注自己产生的选中
+                    if (container.closest && container.closest('.annotation-highlight')) {
+                        return;
+                    }
+                    
+                    // 获取当前记录 ID
+                    var recordId = this.readerItem ? this.readerItem.id : null;
+                    if (!recordId) return;
+                    
+                    // 获取选中文本的上下文（在内容中的位置）
+                    var fullText = this.readerItem.content || '';
+                    var startIdx = fullText.indexOf(text);
+                    if (startIdx === -1) {
+                        // 尝试模糊匹配
+                        for (var i = 0; i < fullText.length - text.length; i++) {
+                            if (fullText.substring(i, i + text.length) === text) {
+                                startIdx = i;
+                                break;
+                            }
+                        }
+                        if (startIdx === -1) return;
+                    }
+                    
+                    // 确认标注不重复
+                    var existing = this.annotations[recordId] || [];
+                    for (var j = 0; j < existing.length; j++) {
+                        if (existing[j].text === text && existing[j].start === startIdx) {
+                            alert('此文字已经标注过了');
+                            sel.removeAllRanges();
+                            return;
+                        }
+                    }
+                    
+                    if (confirm('标注这段文字？\n\n"' + text + '"')) {
+                        if (!this.annotations[recordId]) {
+                            this.annotations[recordId] = [];
+                        }
+                        this.annotations[recordId].push({
+                            text: text,
+                            start: startIdx,
+                            length: text.length,
+                            createdAt: Date.now()
+                        });
+                        this.saveAnnotations();
+                        // 重新渲染当前页面
+                        this.refreshReaderPage();
+                    }
+                    sel.removeAllRanges();
+                },
+
+                clearAllAnnotations: function() {
+                    if (!confirm('确定清除当前分类的所有标注吗？')) return;
+                    for (var i = 0; i < this.readerRecords.length; i++) {
+                        var id = this.readerRecords[i].id;
+                        delete this.annotations[id];
+                    }
+                    this.saveAnnotations();
+                    this.refreshReaderPage();
+                },
+
+                deleteAnnotation: function(recordId, index) {
+                    if (!this.annotations[recordId]) return;
+                    this.annotations[recordId].splice(index, 1);
+                    if (this.annotations[recordId].length === 0) {
+                        delete this.annotations[recordId];
+                    }
+                    this.saveAnnotations();
+                    this.refreshReaderPage();
+                },
+
+                refreshReaderPage: function() {
+                    // 重新渲染当前页面内容
+                    var pageBody = document.querySelector('.reader-content .page-content .page-body');
+                    if (pageBody && this.readerItem) {
+                        pageBody.innerHTML = this.renderContentWithAnnotations(
+                            this.readerItem.content, 
+                            this.readerItem.id
+                        );
+                    }
+                },
+
+                renderContentWithAnnotations: function(text, recordId) {
+                    if (!text) return '';
+                    
+                    var annotations = this.annotations[recordId] || [];
+                    if (annotations.length === 0) {
+                        return this.renderContent(text);
+                    }
+                    
+                    // 按起始位置排序（从后往前插入，避免偏移）
+                    var sorted = annotations.slice().sort(function(a, b) {
+                        return b.start - a.start;
+                    });
+                    
+                    var html = text
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;');
+                    
+                    // 从后往前插入标注标记
+                    for (var i = 0; i < sorted.length; i++) {
+                        var anno = sorted[i];
+                        var start = anno.start;
+                        var len = anno.length;
+                        // 确保不越界
+                        if (start + len > html.length) continue;
+                        
+                        var before = html.substring(0, start);
+                        var highlighted = html.substring(start, start + len);
+                        var after = html.substring(start + len);
+                        
+                        // 检查是否已经被标注包裹（避免重复）
+                        if (before.endsWith('<span class="annotation-highlight"')) {
+                            continue;
+                        }
+                        
+                        html = before + 
+                            '<span class="annotation-highlight" data-anno="' + i + '">' + 
+                            highlighted + 
+                            '<span class="annotation-tooltip">📌 标注 <button class="del-anno" data-record="' + recordId + '" data-index="' + i + '">✕</button></span>' +
+                            '</span>' + 
+                            after;
+                    }
+                    
+                    // 然后进行 Markdown 风格渲染（但跳过已包裹的 span）
+                    var lines = html.split('\n');
+                    var result = [];
+                    var idx = 0;
+                    
+                    while (idx < lines.length) {
+                        var line = lines[idx];
+                        var trimmed = line.trim();
+                        
+                        if (trimmed.startsWith('|') && trimmed.endsWith('|')) {
+                            var tableLines = [];
+                            var j = idx;
+                            while (j < lines.length) {
+                                var t = lines[j].trim();
+                                if (t.startsWith('|') && t.endsWith('|')) {
+                                    tableLines.push(lines[j]);
+                                    j++;
+                                } else {
+                                    break;
+                                }
+                            }
+                            var tableHtml = this._parseTable(tableLines);
+                            if (tableHtml) {
+                                result.push(tableHtml);
+                            }
+                            idx = j;
+                            continue;
+                        }
+                        
+                        if (trimmed.match(/^[-•]\s/)) {
+                            var listItems = [];
+                            var j = idx;
+                            while (j < lines.length) {
+                                var t = lines[j].trim();
+                                if (t.match(/^[-•]\s/)) {
+                                    var content = t.replace(/^[-•]\s/, '')
+                                        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                        .replace(/==(.+?)==/g, '<span class="highlight">$1</span>')
+                                        .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                                    listItems.push('<li style="margin:2px 0;">' + content + '</li>');
+                                    j++;
+                                } else {
+                                    break;
+                                }
+                            }
+                            if (listItems.length > 0) {
+                                result.push('<ul style="margin:4px 0 4px 20px;padding:0;list-style-type:disc;">');
+                                result.push(listItems.join(''));
+                                result.push('</ul>');
+                            }
+                            idx = j;
+                            continue;
+                        }
+                        
+                        if (trimmed === '') {
+                            result.push('');
+                        } else {
+                            var processed = line
+                                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                                .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                                .replace(/==(.+?)==/g, '<span class="highlight">$1</span>')
+                                .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank">$1</a>');
+                            result.push(processed);
+                        }
+                        idx++;
+                    }
+                    
+                    return result.join('<br>');
+                },
+
+                // 原始 renderContent（保留用于其他地方）
                 renderContent: function(text) {
                     if (!text) return '';
                     
@@ -1770,6 +2167,23 @@
                     }
                     html += '</table>';
                     return html;
+                },
+
+                // ----- 标注事件绑定 -----
+                bindAnnotationEvents: function() {
+                    var self = this;
+                    // 使用事件代理监听删除按钮点击
+                    document.querySelector('.reader-content .page-content .page-body')?.addEventListener('click', function(e) {
+                        var target = e.target;
+                        if (target.classList && target.classList.contains('del-anno')) {
+                            var recordId = target.dataset.record;
+                            var index = parseInt(target.dataset.index);
+                            if (recordId && !isNaN(index)) {
+                                self.deleteAnnotation(recordId, index);
+                            }
+                            e.stopPropagation();
+                        }
+                    });
                 },
 
                 wrapText: function(prefix, suffix, textareaId) {
@@ -2143,13 +2557,27 @@
                     this.readerRecords = published;
                     this.readerPage = 0;
                     this.tocOpen = true;
-                    this.readerPaperMode = false; // 默认夜间模式
+                    this.readerPaperMode = false;
+                    this.annotationMode = false;
+                    
+                    // 加载标注
+                    this.loadAnnotations();
                     
                     this._readerKeyHandler = this._handleKeydown.bind(this);
                     document.addEventListener('keydown', this._readerKeyHandler);
                     
                     this.readerOpen = true;
                     document.body.style.overflow = 'hidden';
+                    
+                    // 延迟绑定标注事件
+                    var self = this;
+                    setTimeout(function() {
+                        self.bindAnnotationEvents();
+                        // 绑定选中事件
+                        document.removeEventListener('mouseup', self._selectionHandler);
+                        self._selectionHandler = self.handleTextSelection.bind(self);
+                        document.addEventListener('mouseup', self._selectionHandler);
+                    }, 100);
                 },
 
                 toggleReaderMode: function() {
@@ -2163,11 +2591,16 @@
                         e.preventDefault();
                         if (this.readerPage < this.totalReaderPages - 1) {
                             this.readerPage++;
+                            // 页面切换后重新渲染标注
+                            var self = this;
+                            setTimeout(function() { self.refreshReaderPage(); }, 50);
                         }
                     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
                         e.preventDefault();
                         if (this.readerPage > 0) {
                             this.readerPage--;
+                            var self = this;
+                            setTimeout(function() { self.refreshReaderPage(); }, 50);
                         }
                     } else if (e.key === 'Escape') {
                         e.preventDefault();
@@ -2182,6 +2615,10 @@
                         document.removeEventListener('keydown', this._readerKeyHandler);
                         this._readerKeyHandler = null;
                     }
+                    if (this._selectionHandler) {
+                        document.removeEventListener('mouseup', this._selectionHandler);
+                        this._selectionHandler = null;
+                    }
                     
                     document.body.style.overflow = '';
                     this.isClosing = true;
@@ -2191,32 +2628,40 @@
                         this._closeTimer = null;
                     }
                     
+                    var self = this;
                     this._closeTimer = setTimeout(function() {
-                        this.readerOpen = false;
-                        this.isClosing = false;
-                        this.readerRecords = [];
-                        this.readerPage = 0;
-                        this._closeTimer = null;
-                    }.bind(this), 150);
+                        self.readerOpen = false;
+                        self.isClosing = false;
+                        self.readerRecords = [];
+                        self.readerPage = 0;
+                        self._closeTimer = null;
+                    }, 150);
                 },
 
                 readerNext: function() {
                     if (this.isClosing || !this.readerOpen) return;
                     if (this.readerPage < this.totalReaderPages - 1) {
                         this.readerPage++;
+                        var self = this;
+                        setTimeout(function() { self.refreshReaderPage(); }, 50);
                     }
                 },
                 readerPrev: function() {
                     if (this.isClosing || !this.readerOpen) return;
                     if (this.readerPage > 0) {
                         this.readerPage--;
+                        var self = this;
+                        setTimeout(function() { self.refreshReaderPage(); }, 50);
                     }
                 },
                 goToPage: function(page) {
                     if (this.isClosing || !this.readerOpen) return;
                     this.readerPage = page;
+                    var self = this;
+                    setTimeout(function() { self.refreshReaderPage(); }, 50);
                 },
 
+                // ---- Gist 同步 ----
                 saveToGist: function() {
                     var gistId = this.getGistId();
                     var token = this.getGithubToken();
@@ -2385,6 +2830,7 @@
                         }
                     } catch (e) {}
                     this.ensureUncategorized();
+                    this.loadAnnotations();
                 }
             },
             mounted: function() {
