@@ -672,7 +672,6 @@
         .reader-overlay.paper-mode .reader-toc .toc-header .toggle-btn:hover {
             color: rgba(0,0,0,0.6);
         }
-        /* ★★★ 目录列表文字 ★★★ */
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item {
             color: #3d3428 !important;
         }
@@ -1604,7 +1603,7 @@
                         <button class="nav-btn" @click="readerNext" :disabled="readerPage >= totalReaderPages - 1 || isClosing">下一页 ▶</button>
                     </div>
 
-                    <!-- 标注工具栏 -->
+                    <!-- ★★★ 标注工具栏（含全局删除按钮）★★★ -->
                     <div class="reader-annotation-bar">
                         <button class="anno-btn" :class="{ active: annotationMode }" @click="toggleAnnotationMode">
                             {{ annotationMode ? '🟡 标注中' : '✏️ 标注' }}
@@ -1829,6 +1828,7 @@
 
                 // ★★★ 气泡控制 - 用 Vue data 存储，不依赖 DOM dataset ★★★
                 showBubble: function(recordId, index, x, y) {
+                    console.log('showBubble called:', recordId, index);
                     this._bubbleRecordId = recordId;
                     this._bubbleIndex = index;
                     
@@ -1861,8 +1861,20 @@
                     var recordId = this._bubbleRecordId;
                     var index = this._bubbleIndex;
                     
-                    if (!recordId || index === null || index === undefined) return;
-                    if (!this.annotations[recordId]) return;
+                    console.log('deleteAnnotation called:', recordId, index);
+                    
+                    if (!recordId || index === null || index === undefined) {
+                        console.log('No annotation to delete');
+                        return;
+                    }
+                    if (!this.annotations[recordId]) {
+                        console.log('No annotations for record:', recordId);
+                        return;
+                    }
+                    if (index >= this.annotations[recordId].length) {
+                        console.log('Index out of range:', index, this.annotations[recordId].length);
+                        return;
+                    }
                     
                     this.annotations[recordId].splice(index, 1);
                     if (this.annotations[recordId].length === 0) {
@@ -1902,7 +1914,6 @@
                 // ★★★ 用 JS 直接修正目录颜色 ★★★
                 fixTocColors: function() {
                     var self = this;
-                    // 延迟执行，确保 DOM 已渲染
                     setTimeout(function() {
                         var titles = document.querySelectorAll('.reader-content.toc-page .toc-grid .toc-item .title');
                         var orders = document.querySelectorAll('.reader-content.toc-page .toc-grid .toc-item .order');
@@ -2676,7 +2687,6 @@
 
                 toggleReaderMode: function() {
                     this.readerPaperMode = !this.readerPaperMode;
-                    // ★★★ 切换模式时修正目录颜色 ★★★
                     this.fixTocColors();
                 },
 
@@ -2965,6 +2975,7 @@
                 if (deleteBtn) {
                     deleteBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
+                        console.log('Delete button clicked');
                         self.deleteAnnotation();
                     });
                 }
