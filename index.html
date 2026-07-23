@@ -672,7 +672,7 @@
         .reader-overlay.paper-mode .reader-toc .toc-header .toggle-btn:hover {
             color: rgba(0,0,0,0.6);
         }
-        /* ★★★ 修复：目录列表所有文字变深色 ★★★ */
+        /* ★★★ 目录列表文字 ★★★ */
         .reader-overlay.paper-mode .reader-toc .toc-list .toc-item {
             color: #3d3428 !important;
         }
@@ -732,7 +732,7 @@
             background: rgba(0,0,0,0.02);
         }
 
-        /* ★★★ 修复：目录页（toc-page）文字颜色 ★★★ */
+        /* ★★★ 目录页（toc-page）文字颜色 - 用 JS 兜底，这里作为备用 ★★★ */
         .reader-overlay.paper-mode .reader-content.toc-page .toc-grid .toc-item .order {
             color: rgba(0,0,0,0.25) !important;
         }
@@ -1682,7 +1682,10 @@
                 showTableModal: false,
                 tableCols: 3,
                 tableRows: 3,
-                _tableTargetId: null
+                _tableTargetId: null,
+                // ★★★ 用 Vue data 存储当前气泡要删除的标注信息 ★★★
+                _bubbleRecordId: null,
+                _bubbleIndex: null
             },
             computed: {
                 allCategories: function() {
@@ -1821,12 +1824,14 @@
                         document.getSelection().removeAllRanges();
                     }
                     this.hideBubble();
-                    // 重新渲染页面以显示/隐藏高亮
                     this.refreshReaderPage();
                 },
 
-                // 气泡控制（使用独立的 DOM 气泡）
+                // ★★★ 气泡控制 - 用 Vue data 存储，不依赖 DOM dataset ★★★
                 showBubble: function(recordId, index, x, y) {
+                    this._bubbleRecordId = recordId;
+                    this._bubbleIndex = index;
+                    
                     var bubble = document.getElementById('annotationBubble');
                     if (!bubble) return;
                     
@@ -1841,20 +1846,24 @@
                     if (rect.bottom > window.innerHeight - 10) {
                         bubble.style.top = (y - rect.height - 20) + 'px';
                     }
-                    
-                    bubble.dataset.recordId = recordId;
-                    bubble.dataset.index = index;
                 },
                 hideBubble: function() {
+                    this._bubbleRecordId = null;
+                    this._bubbleIndex = null;
                     var bubble = document.getElementById('annotationBubble');
                     if (bubble) {
                         bubble.style.display = 'none';
                     }
                 },
 
-                // 删除单条标注
-                deleteAnnotation: function(recordId, index) {
+                // ★★★ 删除标注 - 直接从 Vue data 读取 recordId 和 index ★★★
+                deleteAnnotation: function() {
+                    var recordId = this._bubbleRecordId;
+                    var index = this._bubbleIndex;
+                    
+                    if (!recordId || index === null || index === undefined) return;
                     if (!this.annotations[recordId]) return;
+                    
                     this.annotations[recordId].splice(index, 1);
                     if (this.annotations[recordId].length === 0) {
                         delete this.annotations[recordId];
@@ -1882,11 +1891,43 @@
                             this.readerItem.content, 
                             this.readerItem.id
                         );
-                        // 只有标注模式开启时才绑定点击事件
                         if (this.annotationMode) {
                             this.bindAnnotationClicks();
                         }
                     }
+                    // ★★★ 切换纸张模式时修正目录颜色 ★★★
+                    this.fixTocColors();
+                },
+
+                // ★★★ 用 JS 直接修正目录颜色 ★★★
+                fixTocColors: function() {
+                    var self = this;
+                    // 延迟执行，确保 DOM 已渲染
+                    setTimeout(function() {
+                        var titles = document.querySelectorAll('.reader-content.toc-page .toc-grid .toc-item .title');
+                        var orders = document.querySelectorAll('.reader-content.toc-page .toc-grid .toc-item .order');
+                        var counts = document.querySelectorAll('.reader-content.toc-page .toc-count');
+                        var h2s = document.querySelectorAll('.reader-content.toc-page h2');
+                        
+                        var isPaper = self.readerPaperMode;
+                        var color = isPaper ? '#3d3428' : 'rgba(255,255,255,0.8)';
+                        var orderColor = isPaper ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.3)';
+                        var countColor = isPaper ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.3)';
+                        var h2Color = isPaper ? '#2c241a' : 'white';
+                        
+                        titles.forEach(function(el) {
+                            el.style.color = color;
+                        });
+                        orders.forEach(function(el) {
+                            el.style.color = orderColor;
+                        });
+                        counts.forEach(function(el) {
+                            el.style.color = countColor;
+                        });
+                        h2s.forEach(function(el) {
+                            el.style.color = h2Color;
+                        });
+                    }, 50);
                 },
 
                 bindAnnotationClicks: function() {
@@ -2607,6 +2648,8 @@
                     this.tocOpen = true;
                     this.readerPaperMode = false;
                     this.annotationMode = false;
+                    this._bubbleRecordId = null;
+                    this._bubbleIndex = null;
                     
                     this.loadAnnotations();
                     
@@ -2633,6 +2676,8 @@
 
                 toggleReaderMode: function() {
                     this.readerPaperMode = !this.readerPaperMode;
+                    // ★★★ 切换模式时修正目录颜色 ★★★
+                    this.fixTocColors();
                 },
 
                 _handleKeydown: function(e) {
@@ -2915,21 +2960,16 @@
                     }
                 }, 500);
 
-                // 绑定气泡的删除按钮
-                var bubble = document.getElementById('annotationBubble');
+                // ★★★ 气泡删除按钮 - 直接调用 Vue 的 deleteAnnotation ★★★
                 var deleteBtn = document.getElementById('bubbleDeleteBtn');
-
                 if (deleteBtn) {
                     deleteBtn.addEventListener('click', function(e) {
                         e.stopPropagation();
-                        var recordId = bubble.dataset.recordId;
-                        var index = parseInt(bubble.dataset.index);
-                        if (recordId && !isNaN(index)) {
-                            self.deleteAnnotation(recordId, index);
-                        }
+                        self.deleteAnnotation();
                     });
                 }
 
+                var bubble = document.getElementById('annotationBubble');
                 if (bubble) {
                     bubble.addEventListener('click', function(e) {
                         e.stopPropagation();
